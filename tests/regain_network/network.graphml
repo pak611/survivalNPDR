@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="v_name" for="node" attr.name="name" attr.type="string"/>
+  <key id="e_color" for="edge" attr.name="color" attr.type="string"/>
+  <key id="e_width" for="edge" attr.name="width" attr.type="double"/>
+  <graph id="G" edgedefault="undirected">
+    <node id="n0">
+      <data key="v_name">PDHA2</data>
+    </node>
+    <node id="n1">
+      <data key="v_name">C20orf26</data>
+    </node>
+    <node id="n2">
+      <data key="v_name">HTR2A</data>
+    </node>
+    <node id="n3">
+      <data key="v_name">MC4R</data>
+    </node>
+    <node id="n4">
+      <data key="v_name">HAVCR-1</data>
+    </node>
+    <node id="n5">
+      <data key="v_name">HUMNPIIY20</data>
+    </node>
+    <node id="n6">
+      <data key="v_name">PKD2L2</data>
+    </node>
+    <node id="n7">
+      <data key="v_name">OR4A1P</data>
+    </node>
+    <node id="n8">
+      <data key="v_name">FLJ13262</data>
+    </node>
+    <node id="n9">
+      <data key="v_name">CBR1</data>
+    </node>
+    <node id="n10">
+      <data key="v_name">FLJ21369</data>
+    </node>
+    <node id="n11">
+      <data key="v_name">FKSG83</data>
+    </node>
+    <node id="n12">
+      <data key="v_name">MGC3771</data>
+    </node>
+    <node id="n13">
+      <data key="v_name">OSIL</data>
+    </node>
+    <node id="n14">
+      <data key="v_name">SLC17A4</data>
+    </node>
+    <node id="n15">
+      <data key="v_name">DNAH9</data>
+    </node>
+    <node id="n16">
+      <data key="v_name">TTY7</data>
+    </node>
+    <node id="n17">
+      <data key="v_name">KIAA1322</data>
+    </node>
+    <node id="n18">
+      <data key="v_name">GFRA3</data>
+    </node>
+    <node id="n19">
+      <data key="v_name">CASP4</data>
+    </node>
+    <node id="n20">
+      <data key="v_name">DSCR8</data>
+    </node>
+    <node id="n21">
+      <data key="v_name">PCYT1B</data>
+    </node>
+    <node id="n22">
+      <data key="v_name">KIAA1768</data>
+    </node>
+    <node id="n23">
+      <data key="v_name">TNFRSF4</data>
+    </node>
+    <node id="n24">
+      <data key="v_name">FGF21</data>
+    </node>
+    <node id="n25">
+      <data key="v_name">HSPC059</data>
+    </node>
+    <node id="n26">
+      <data key="v_name">RS1</data>
+    </node>
+    <node id="n27">
+      <data key="v_name">ZNF259P</data>
+    </node>
+    <node id="n28">
+      <data key="v_name">TG</data>
+    </node>
+    <node id="n29">
+      <data key="v_name">MEGF11</data>
+    </node>
+    <node id="n30">
+      <data key="v_name">MGAT5</data>
+    </node>
+    <node id="n31">
+      <data key="v_name">IL26</data>
+    </node>
+    <node id="n32">
+      <data key="v_name">ADAM7</data>
+    </node>
+    <node id="n33">
+      <data key="v_name">DKFZp434G118</data>
+    </node>
+    <node id="n34">
+      <data key="v_name">FLJ22609</data>
+    </node>
+    <node id="n35">
+      <data key="v_name">ATP2B4</data>
+    </node>
+    <node id="n36">
+      <data key="v_name">NAG14</data>
+    </node>
+    <node id="n37">
+      <data key="v_name">MC5R</data>
+    </node>
+    <node id="n38">
+      <data key="v_name">APTX</data>
+    </node>
+    <node id="n39">
+      <data key="v_name">PDE6A</data>
+    </node>
+    <node id="n40">
+      <data key="v_name">CACNG2</data>
+    </node>
+    <node id="n41">
+      <data key="v_name">FLJ14320</data>
+    </node>
+    <node id="n42">
+      <data key="v_name">C8A</data>
+    </node>
+    <node id="n43">
+      <data key="v_name">FLJ11726</data>
+    </node>
+    <node id="n44">
+      <data key="v_name">TSGA13</data>
+    </node>
+    <node id="n45">
+      <data key="v_name">SIM1</data>
+    </node>
+    <node id="n46">
+      <data key="v_name">H2AFI</data>
+    </node>
+    <node id="n47">
+      <data key="v_name">KCNK9</data>
+    </node>
+    <node id="n48">
+      <data key="v_name">LOC51301</data>
+    </node>
+    <node id="n49">
+      <data key="v_name">FLJ11348</data>
+    </node>
+    <node id="n50">
+      <data key="v_name">GCKR</data>
+    </node>
+    <node id="n51">
+      <data key="v_name">KIAA0378</data>
+    </node>
+    <node id="n52">
+      <data key="v_name">PROX1</data>
+    </node>
+    <node id="n53">
+      <data key="v_name">ZNF73</data>
+    </node>
+    <node id="n54">
+      <data key="v_name">SLC18A1</data>
+    </node>
+    <node id="n55">
+      <data key="v_name">OATPRP4</data>
+    </node>
+    <node id="n56">
+      <data key="v_name">SSFA2</data>
+    </node>
+    <node id="n57">
+      <data key="v_name">DKFZP434B1727</data>
+    </node>
+    <node id="n58">
+      <data key="v_name">MDS027</data>
+    </node>
+    <node id="n59">
+      <data key="v_name">LOC51233</data>
+    </node>
+    <node id="n60">
+      <data key="v_name">KIAA1775</data>
+    </node>
+    <node id="n61">
+      <data key="v_name">LIM2</data>
+    </node>
+    <node id="n62">
+      <data key="v_name">ZIN</data>
+    </node>
+    <node id="n63">
+      <data key="v_name">SIAT8B</data>
+    </node>
+    <node id="n64">
+      <data key="v_name">TRAF6</data>
+    </node>
+    <node id="n65">
+      <data key="v_name">APPL</data>
+    </node>
+    <node id="n66">
+      <data key="v_name">PARK2</data>
+    </node>
+    <node id="n67">
+      <data key="v_name">ORF1</data>
+    </node>
+    <node id="n68">
+      <data key="v_name">HNRNPG-T</data>
+    </node>
+    <node id="n69">
+      <data key="v_name">KIAA1465</data>
+    </node>
+    <node id="n70">
+      <data key="v_name">GPR50</data>
+    </node>
+    <node id="n71">
+      <data key="v_name">IUF1</data>
+    </node>
+    <node id="n72">
+      <data key="v_name">MGC14436</data>
+    </node>
+    <node id="n73">
+      <data key="v_name">PRDM10</data>
+    </node>
+    <node id="n74">
+      <data key="v_name">FLJ11827</data>
+    </node>
+    <node id="n75">
+      <data key="v_name">CINP</data>
+    </node>
+    <node id="n76">
+      <data key="v_name">DKFZP434H132</data>
+    </node>
+    <node id="n77">
+      <data key="v_name">PRO0397</data>
+    </node>
+    <node id="n78">
+      <data key="v_name">USP2</data>
+    </node>
+    <node id="n79">
+      <data key="v_name">GYPE</data>
+    </node>
+    <node id="n80">
+      <data key="v_name">C21orf55</data>
+    </node>
+    <edge source="n0" target="n1">
+      <data key="e_color">#FF0000</data>
+      <data key="e_width">2.32170861758382</data>
+    </edge>
+    <edge source="n0" target="n2">
+      <data key="e_color">#EB3939</data>
+      <data key="e_width">2.14434803679542</data>
+    </edge>
+    <edge source="n0" target="n3">
+      <data key="e_color">#B9BEB9</data>
+      <data key="e_width">1.74704655788377</data>
+    </edge>
+    <edge source="n0" target="n4">
+      <data key="e_color">#ABBFAB</data>
+      <data key="e_width">1.6946864472567</data>
+    </edge>
+    <edge source="n0" target="n5">
+      <data key="e_color">#A5C0A5</data>
+      <data key="e_width">1.66350305459658</data>
+    </edge>
+    <edge source="n0" target="n6">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.39692807870887</data>
+    </edge>
+    <edge source="n0" target="n9">
+      <data key="e_color">#97C297</data>
+      <data key="e_width">1.6144014491843</data>
+    </edge>
+    <edge source="n0" target="n10">
+      <data key="e_color">#8CC38C</data>
+      <data key="e_width">1.57150171893496</data>
+    </edge>
+    <edge source="n0" target="n11">
+      <data key="e_color">#8CC38C</data>
+      <data key="e_width">1.56269012209266</data>
+    </edge>
+    <edge source="n0" target="n12">
+      <data key="e_color">#89C389</data>
+      <data key="e_width">1.5587490076916</data>
+    </edge>
+    <edge source="n0" target="n13">
+      <data key="e_color">#86C386</data>
+      <data key="e_width">1.53838768167262</data>
+    </edge>
+    <edge source="n0" target="n14">
+      <data key="e_color">#81C481</data>
+      <data key="e_width">1.51740967552246</data>
+    </edge>
+    <edge source="n0" target="n15">
+      <data key="e_color">#7EC47E</data>
+      <data key="e_width">1.51498276559218</data>
+    </edge>
+    <edge source="n0" target="n16">
+      <data key="e_color">#7EC47E</data>
+      <data key="e_width">1.51223207894922</data>
+    </edge>
+    <edge source="n0" target="n17">
+      <data key="e_color">#7EC47E</data>
+      <data key="e_width">1.51171683683138</data>
+    </edge>
+    <edge source="n0" target="n18">
+      <data key="e_color">#7BC57B</data>
+      <data key="e_width">1.50305601812123</data>
+    </edge>
+    <edge source="n0" target="n19">
+      <data key="e_color">#7BC57B</data>
+      <data key="e_width">1.49584035349722</data>
+    </edge>
+    <edge source="n0" target="n20">
+      <data key="e_color">#7BC57B</data>
+      <data key="e_width">1.49414091437226</data>
+    </edge>
+    <edge source="n0" target="n21">
+      <data key="e_color">#78C578</data>
+      <data key="e_width">1.48624768044941</data>
+    </edge>
+    <edge source="n0" target="n22">
+      <data key="e_color">#78C578</data>
+      <data key="e_width">1.48255002531699</data>
+    </edge>
+    <edge source="n0" target="n23">
+      <data key="e_color">#73C673</data>
+      <data key="e_width">1.46291818687966</data>
+    </edge>
+    <edge source="n0" target="n24">
+      <data key="e_color">#73C673</data>
+      <data key="e_width">1.45999344489394</data>
+    </edge>
+    <edge source="n0" target="n25">
+      <data key="e_color">#70C670</data>
+      <data key="e_width">1.45893188974318</data>
+    </edge>
+    <edge source="n0" target="n26">
+      <data key="e_color">#6DC66D</data>
+      <data key="e_width">1.44751154908551</data>
+    </edge>
+    <edge source="n0" target="n27">
+      <data key="e_color">#6DC66D</data>
+      <data key="e_width">1.4437940310215</data>
+    </edge>
+    <edge source="n0" target="n28">
+      <data key="e_color">#6DC66D</data>
+      <data key="e_width">1.44095678786057</data>
+    </edge>
+    <edge source="n0" target="n30">
+      <data key="e_color">#6AC66A</data>
+      <data key="e_width">1.42903050808859</data>
+    </edge>
+    <edge source="n0" target="n31">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28089736513538</data>
+    </edge>
+    <edge source="n0" target="n32">
+      <data key="e_color">#53C953</data>
+      <data key="e_width">1.34174099346154</data>
+    </edge>
+    <edge source="n0" target="n33">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.4008165679871</data>
+    </edge>
+    <edge source="n0" target="n34">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.39857988262525</data>
+    </edge>
+    <edge source="n0" target="n35">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.3980878190496</data>
+    </edge>
+    <edge source="n0" target="n36">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.3120378482045</data>
+    </edge>
+    <edge source="n0" target="n38">
+      <data key="e_color">#4EC94E</data>
+      <data key="e_width">1.32337934020478</data>
+    </edge>
+    <edge source="n0" target="n39">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.2754815783902</data>
+    </edge>
+    <edge source="n0" target="n41">
+      <data key="e_color">#56C956</data>
+      <data key="e_width">1.35622720338319</data>
+    </edge>
+    <edge source="n0" target="n42">
+      <data key="e_color">#56C956</data>
+      <data key="e_width">1.35244046297809</data>
+    </edge>
+    <edge source="n0" target="n44">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.33569013236623</data>
+    </edge>
+    <edge source="n0" target="n45">
+      <data key="e_color">#53C953</data>
+      <data key="e_width">1.341197519561</data>
+    </edge>
+    <edge source="n0" target="n46">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.33367086277831</data>
+    </edge>
+    <edge source="n0" target="n47">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.32966572406336</data>
+    </edge>
+    <edge source="n0" target="n48">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.32759393244337</data>
+    </edge>
+    <edge source="n0" target="n50">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.30948279670978</data>
+    </edge>
+    <edge source="n0" target="n51">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.30873814959274</data>
+    </edge>
+    <edge source="n0" target="n52">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.30801263527104</data>
+    </edge>
+    <edge source="n0" target="n53">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.29987004699623</data>
+    </edge>
+    <edge source="n0" target="n54">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.25907040094071</data>
+    </edge>
+    <edge source="n0" target="n56">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28751788153734</data>
+    </edge>
+    <edge source="n0" target="n59">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.21708806994548</data>
+    </edge>
+    <edge source="n0" target="n61">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.25306263237593</data>
+    </edge>
+    <edge source="n0" target="n62">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.25214386361383</data>
+    </edge>
+    <edge source="n0" target="n63">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.24483739737514</data>
+    </edge>
+    <edge source="n0" target="n64">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.2419770444601</data>
+    </edge>
+    <edge source="n0" target="n66">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.24148250653243</data>
+    </edge>
+    <edge source="n0" target="n67">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.23851841813415</data>
+    </edge>
+    <edge source="n0" target="n69">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23397763401328</data>
+    </edge>
+    <edge source="n0" target="n71">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22968678469776</data>
+    </edge>
+    <edge source="n0" target="n72">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22785943423942</data>
+    </edge>
+    <edge source="n0" target="n73">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22039779198524</data>
+    </edge>
+    <edge source="n0" target="n74">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22027079751947</data>
+    </edge>
+    <edge source="n0" target="n75">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.21820164410464</data>
+    </edge>
+    <edge source="n0" target="n78">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20533600267324</data>
+    </edge>
+    <edge source="n0" target="n80">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20247403285848</data>
+    </edge>
+    <edge source="n1" target="n2">
+      <data key="e_color">#56C956</data>
+      <data key="e_width">1.3482759095472</data>
+    </edge>
+    <edge source="n1" target="n6">
+      <data key="e_color">#A3C0A3</data>
+      <data key="e_width">1.6554369829425</data>
+    </edge>
+    <edge source="n1" target="n7">
+      <data key="e_color">#A3C0A3</data>
+      <data key="e_width">1.65387589298882</data>
+    </edge>
+    <edge source="n1" target="n8">
+      <data key="e_color">#A0C1A0</data>
+      <data key="e_width">1.64516107102038</data>
+    </edge>
+    <edge source="n1" target="n11">
+      <data key="e_color">#67C767</data>
+      <data key="e_width">1.42149377522259</data>
+    </edge>
+    <edge source="n1" target="n14">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.36114666298998</data>
+    </edge>
+    <edge source="n1" target="n16">
+      <data key="e_color">#75C575</data>
+      <data key="e_width">1.47807849444378</data>
+    </edge>
+    <edge source="n1" target="n19">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.23875010294444</data>
+    </edge>
+    <edge source="n1" target="n23">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.24837700281451</data>
+    </edge>
+    <edge source="n1" target="n25">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.24915141689388</data>
+    </edge>
+    <edge source="n1" target="n29">
+      <data key="e_color">#6AC66A</data>
+      <data key="e_width">1.42991652995221</data>
+    </edge>
+    <edge source="n1" target="n31">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.36911380315853</data>
+    </edge>
+    <edge source="n1" target="n33">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.3592606593736</data>
+    </edge>
+    <edge source="n1" target="n34">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.3297335697351</data>
+    </edge>
+    <edge source="n1" target="n36">
+      <data key="e_color">#5FC85F</data>
+      <data key="e_width">1.39154072364049</data>
+    </edge>
+    <edge source="n1" target="n37">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.24798902531942</data>
+    </edge>
+    <edge source="n1" target="n40">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.36033959501414</data>
+    </edge>
+    <edge source="n1" target="n55">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23260097979108</data>
+    </edge>
+    <edge source="n1" target="n59">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.21365275915174</data>
+    </edge>
+    <edge source="n1" target="n60">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.26455579395735</data>
+    </edge>
+    <edge source="n2" target="n4">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.234217542595</data>
+    </edge>
+    <edge source="n2" target="n6">
+      <data key="e_color">#86C386</data>
+      <data key="e_width">1.5424209605432</data>
+    </edge>
+    <edge source="n2" target="n7">
+      <data key="e_color">#81C481</data>
+      <data key="e_width">1.52532443801866</data>
+    </edge>
+    <edge source="n2" target="n8">
+      <data key="e_color">#6AC66A</data>
+      <data key="e_width">1.4271977238727</data>
+    </edge>
+    <edge source="n2" target="n11">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23363121773582</data>
+    </edge>
+    <edge source="n2" target="n13">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28685195694002</data>
+    </edge>
+    <edge source="n2" target="n14">
+      <data key="e_color">#84C484</data>
+      <data key="e_width">1.5273984155522</data>
+    </edge>
+    <edge source="n2" target="n16">
+      <data key="e_color">#5FC85F</data>
+      <data key="e_width">1.39168771755216</data>
+    </edge>
+    <edge source="n2" target="n23">
+      <data key="e_color">#64C764</data>
+      <data key="e_width">1.40501644769664</data>
+    </edge>
+    <edge source="n2" target="n29">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.39458610193992</data>
+    </edge>
+    <edge source="n2" target="n31">
+      <data key="e_color">#67C767</data>
+      <data key="e_width">1.41884521579714</data>
+    </edge>
+    <edge source="n2" target="n36">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22656166145022</data>
+    </edge>
+    <edge source="n2" target="n37">
+      <data key="e_color">#5CC85C</data>
+      <data key="e_width">1.3739166089129</data>
+    </edge>
+    <edge source="n2" target="n40">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.23882245891722</data>
+    </edge>
+    <edge source="n2" target="n43">
+      <data key="e_color">#53C953</data>
+      <data key="e_width">1.34672809351042</data>
+    </edge>
+    <edge source="n2" target="n49">
+      <data key="e_color">#4EC94E</data>
+      <data key="e_width">1.32124259060384</data>
+    </edge>
+    <edge source="n2" target="n58">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23360880250731</data>
+    </edge>
+    <edge source="n2" target="n59">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.27112740250765</data>
+    </edge>
+    <edge source="n2" target="n60">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22095545947864</data>
+    </edge>
+    <edge source="n2" target="n70">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23350731038145</data>
+    </edge>
+    <edge source="n2" target="n77">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20832914446474</data>
+    </edge>
+    <edge source="n3" target="n6">
+      <data key="e_color">#75C575</data>
+      <data key="e_width">1.48197603169954</data>
+    </edge>
+    <edge source="n3" target="n7">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20747321275716</data>
+    </edge>
+    <edge source="n3" target="n8">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.27483917571863</data>
+    </edge>
+    <edge source="n3" target="n14">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.259128244471</data>
+    </edge>
+    <edge source="n3" target="n16">
+      <data key="e_color">#75C575</data>
+      <data key="e_width">1.4791956840098</data>
+    </edge>
+    <edge source="n3" target="n19">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20456712100095</data>
+    </edge>
+    <edge source="n3" target="n33">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.29826160698692</data>
+    </edge>
+    <edge source="n3" target="n34">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.39988932891726</data>
+    </edge>
+    <edge source="n3" target="n36">
+      <data key="e_color">#5CC85C</data>
+      <data key="e_width">1.37301532494511</data>
+    </edge>
+    <edge source="n3" target="n54">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.29941514762458</data>
+    </edge>
+    <edge source="n3" target="n58">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22891370619339</data>
+    </edge>
+    <edge source="n4" target="n16">
+      <data key="e_color">#78C578</data>
+      <data key="e_width">1.48719857231458</data>
+    </edge>
+    <edge source="n4" target="n19">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22847669199966</data>
+    </edge>
+    <edge source="n4" target="n34">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.27101378396612</data>
+    </edge>
+    <edge source="n4" target="n36">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.29764191599388</data>
+    </edge>
+    <edge source="n5" target="n6">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.3932434397395</data>
+    </edge>
+    <edge source="n5" target="n8">
+      <data key="e_color">#56C956</data>
+      <data key="e_width">1.35909451383332</data>
+    </edge>
+    <edge source="n6" target="n9">
+      <data key="e_color">#78C578</data>
+      <data key="e_width">1.48451294217056</data>
+    </edge>
+    <edge source="n6" target="n11">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.35933730882816</data>
+    </edge>
+    <edge source="n6" target="n12">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22899938739545</data>
+    </edge>
+    <edge source="n6" target="n13">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.2204377684645</data>
+    </edge>
+    <edge source="n6" target="n16">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20614698138054</data>
+    </edge>
+    <edge source="n6" target="n20">
+      <data key="e_color">#53C953</data>
+      <data key="e_width">1.34041042986366</data>
+    </edge>
+    <edge source="n6" target="n23">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.25485637153184</data>
+    </edge>
+    <edge source="n6" target="n25">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.23617180014812</data>
+    </edge>
+    <edge source="n6" target="n28">
+      <data key="e_color">#5CC85C</data>
+      <data key="e_width">1.37992094027664</data>
+    </edge>
+    <edge source="n6" target="n32">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.36611934290906</data>
+    </edge>
+    <edge source="n6" target="n35">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.23916865983513</data>
+    </edge>
+    <edge source="n6" target="n39">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.36039698195366</data>
+    </edge>
+    <edge source="n6" target="n42">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.32712185115116</data>
+    </edge>
+    <edge source="n6" target="n44">
+      <data key="e_color">#53C953</data>
+      <data key="e_width">1.34318390855547</data>
+    </edge>
+    <edge source="n6" target="n55">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.29511316573541</data>
+    </edge>
+    <edge source="n6" target="n57">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.2874169557563</data>
+    </edge>
+    <edge source="n6" target="n65">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22068905180683</data>
+    </edge>
+    <edge source="n6" target="n71">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22673003815441</data>
+    </edge>
+    <edge source="n7" target="n9">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.25113909445839</data>
+    </edge>
+    <edge source="n7" target="n11">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.21003076600224</data>
+    </edge>
+    <edge source="n7" target="n13">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.2525706965119</data>
+    </edge>
+    <edge source="n7" target="n16">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.29657265493958</data>
+    </edge>
+    <edge source="n7" target="n19">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.26330348772136</data>
+    </edge>
+    <edge source="n7" target="n21">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.26819160805698</data>
+    </edge>
+    <edge source="n7" target="n22">
+      <data key="e_color">#3DCB3D</data>
+      <data key="e_width">1.24836683099402</data>
+    </edge>
+    <edge source="n7" target="n26">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.30582662228332</data>
+    </edge>
+    <edge source="n7" target="n34">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.27367551886529</data>
+    </edge>
+    <edge source="n7" target="n36">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.2462491591827</data>
+    </edge>
+    <edge source="n7" target="n42">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.31351900501333</data>
+    </edge>
+    <edge source="n7" target="n44">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.26331148022773</data>
+    </edge>
+    <edge source="n7" target="n45">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23459347639697</data>
+    </edge>
+    <edge source="n8" target="n10">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.24228845239918</data>
+    </edge>
+    <edge source="n8" target="n11">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23550760738353</data>
+    </edge>
+    <edge source="n8" target="n12">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22259713518382</data>
+    </edge>
+    <edge source="n8" target="n13">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.21979905777528</data>
+    </edge>
+    <edge source="n8" target="n14">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20491191229108</data>
+    </edge>
+    <edge source="n8" target="n15">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23022057865743</data>
+    </edge>
+    <edge source="n8" target="n16">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28238562404567</data>
+    </edge>
+    <edge source="n8" target="n18">
+      <data key="e_color">#4BCA4B</data>
+      <data key="e_width">1.30389596363817</data>
+    </edge>
+    <edge source="n8" target="n19">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22451116088177</data>
+    </edge>
+    <edge source="n8" target="n20">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22911124638228</data>
+    </edge>
+    <edge source="n8" target="n21">
+      <data key="e_color">#64C764</data>
+      <data key="e_width">1.40671337757709</data>
+    </edge>
+    <edge source="n8" target="n22">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.39625373829383</data>
+    </edge>
+    <edge source="n8" target="n26">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.21549083224014</data>
+    </edge>
+    <edge source="n8" target="n32">
+      <data key="e_color">#64C764</data>
+      <data key="e_width">1.40632358972446</data>
+    </edge>
+    <edge source="n8" target="n38">
+      <data key="e_color">#59C859</data>
+      <data key="e_width">1.36803589773021</data>
+    </edge>
+    <edge source="n8" target="n41">
+      <data key="e_color">#4EC94E</data>
+      <data key="e_width">1.31540581346914</data>
+    </edge>
+    <edge source="n8" target="n46">
+      <data key="e_color">#48CA48</data>
+      <data key="e_width">1.30304355904139</data>
+    </edge>
+    <edge source="n8" target="n65">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.24172625447689</data>
+    </edge>
+    <edge source="n8" target="n68">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23518851455939</data>
+    </edge>
+    <edge source="n8" target="n76">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.21465490803795</data>
+    </edge>
+    <edge source="n9" target="n36">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23494081124029</data>
+    </edge>
+    <edge source="n11" target="n14">
+      <data key="e_color">#62C762</data>
+      <data key="e_width">1.39495769751045</data>
+    </edge>
+    <edge source="n11" target="n16">
+      <data key="e_color">#5CC85C</data>
+      <data key="e_width">1.37134168254038</data>
+    </edge>
+    <edge source="n11" target="n19">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28607460909735</data>
+    </edge>
+    <edge source="n11" target="n23">
+      <data key="e_color">#6DC66D</data>
+      <data key="e_width">1.4436713387239</data>
+    </edge>
+    <edge source="n11" target="n31">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20779467961142</data>
+    </edge>
+    <edge source="n11" target="n33">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.26117588532306</data>
+    </edge>
+    <edge source="n11" target="n34">
+      <data key="e_color">#4EC94E</data>
+      <data key="e_width">1.31721007856077</data>
+    </edge>
+    <edge source="n11" target="n36">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.24570209041874</data>
+    </edge>
+    <edge source="n11" target="n58">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.28050795070301</data>
+    </edge>
+    <edge source="n11" target="n79">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20420994368368</data>
+    </edge>
+    <edge source="n13" target="n33">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.2117771075881</data>
+    </edge>
+    <edge source="n14" target="n16">
+      <data key="e_color">#6AC66A</data>
+      <data key="e_width">1.42969303433659</data>
+    </edge>
+    <edge source="n14" target="n25">
+      <data key="e_color">#51C951</data>
+      <data key="e_width">1.33115917017594</data>
+    </edge>
+    <edge source="n14" target="n34">
+      <data key="e_color">#4EC94E</data>
+      <data key="e_width">1.32308183520154</data>
+    </edge>
+    <edge source="n14" target="n36">
+      <data key="e_color">#32CD32</data>
+      <data key="e_width">1.20815392961638</data>
+    </edge>
+    <edge source="n16" target="n23">
+      <data key="e_color">#5FC85F</data>
+      <data key="e_width">1.38207387691049</data>
+    </edge>
+    <edge source="n16" target="n25">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28385013217029</data>
+    </edge>
+    <edge source="n16" target="n29">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.22359744175557</data>
+    </edge>
+    <edge source="n16" target="n36">
+      <data key="e_color">#40CB40</data>
+      <data key="e_width">1.26543238518214</data>
+    </edge>
+    <edge source="n22" target="n25">
+      <data key="e_color">#45CA45</data>
+      <data key="e_width">1.28408913440991</data>
+    </edge>
+    <edge source="n23" target="n25">
+      <data key="e_color">#6AC66A</data>
+      <data key="e_width">1.43206884858759</data>
+    </edge>
+    <edge source="n23" target="n36">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.22855923829298</data>
+    </edge>
+    <edge source="n25" target="n26">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.27354039174186</data>
+    </edge>
+    <edge source="n25" target="n31">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23202213569396</data>
+    </edge>
+    <edge source="n25" target="n33">
+      <data key="e_color">#3ACC3A</data>
+      <data key="e_width">1.24598584896927</data>
+    </edge>
+    <edge source="n25" target="n34">
+      <data key="e_color">#34CC34</data>
+      <data key="e_width">1.21669665116665</data>
+    </edge>
+    <edge source="n31" target="n36">
+      <data key="e_color">#42CB42</data>
+      <data key="e_width">1.27919502619143</data>
+    </edge>
+    <edge source="n36" target="n53">
+      <data key="e_color">#37CC37</data>
+      <data key="e_width">1.23046886015732</data>
+    </edge>
+  </graph>
+</graphml>

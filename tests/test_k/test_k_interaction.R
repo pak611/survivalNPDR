@@ -1,0 +1,216 @@
+
+
+# Testing k for main effects
+
+# Load necessary libraries and your custom functions
+devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/simSurvData/cox_epistasis")
+devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
+
+# Define multiple values of k (neighbors)
+k_values <- c(5, 20, 100, 190)  # Add more k values as needed
+
+# Assuming the true positives are known
+true_functional_features <- paste0("intervar", seq(3, 42))  # True functional features for this simulation
+
+
+
+# Initialize a data frame to store precision, recall, and k for each replicate
+results_df <- data.frame()
+
+# Number of replicates
+num_replicates <- 20
+
+# Parameters for the simulation
+ran_seed <- 8675309
+num_features <- 500
+num_samples <- 200
+num_functional <- 0
+censor <- 0.7
+
+
+
+# Loop over k values
+for (k in k_values) {
+  
+  # Loop for running the model 100 times for each k
+  for (i in 1:num_replicates) {
+
+    #browser()
+    # var_names <- paste0("X", 1:num_features)
+
+    # # Generate betas with random seeds
+    # betas <- withr::with_seed(seed = ran_seed, 
+    #                         c(runif(num_functional, min = 0.0001, max = 0.001),
+    #                             runif(num_features - num_functional, min = 0.0001, max = 0.001)))
+
+    # # Define interaction matrix for interactions between features
+    # inter.mat <- matrix(0, nrow = num_features, ncol = num_features)
+    # for (i in 50:59) {
+    #     inter.mat[i, i + 1] <- runif(1, min = 0.005, max = 0.05)
+    #     inter.mat[i + 1, i] <- runif(1, min = 0.005, max = 0.05)
+    # }
+
+    # # Simulate survival data
+    # sim_seed <- 2468
+    # simdata <- withr::with_seed(seed = sim_seed,
+    #                             sim.survdata(N = num_samples, T = 20, num.data.frames = 1, 
+    #                                         covariate = 1:num_features, low = 0, high = 1, 
+    #                                         beta = betas, interactions = TRUE, inter.mat = inter.mat, 
+    #                                         xvars = num_features, mu = 0,
+    #                                         sd = c(rep(0.1, num_features), rep(1, num_features - num_features)),
+    #                                         censor = censor))
+
+
+
+    # # Now name the interacting features
+    # new_names_inter <- paste0("intervar", 50:59)
+    # old_names_inter <- paste0("X", 50:59)
+    # names(old_names_inter) <- new_names_inter
+
+    # # Rename ridiculous status/time variable names
+    # dat <- simdata$data |> 
+    # mutate(status = case_when(
+    #     failed == TRUE ~ 1,
+    #     TRUE ~ 0
+    # )) |> 
+    # rename(time = "y") |> 
+    # select(all_of(c("time", "status", var_names))) |> 
+    # rename(all_of(old_names_inter))
+
+    # dat |> select(status) |> table()
+
+    # # add in a new column that is the product of the interacting features
+    # dat$intervar50_51 <- dat$intervar50 * dat$intervar51
+    # dat$intervar52_53 <- dat$intervar52 * dat$intervar53
+    # dat$intervar54_55 <- dat$intervar54 * dat$intervar55
+    # dat$intervar56_57 <- dat$intervar56 * dat$intervar57
+    # dat$intervar58_59 <- dat$intervar58 * dat$intervar59
+
+    devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/simSurvData/cox_epistasis")
+
+    # Draw a random seed
+    sim_seed <- sample(1:1000000, 1)
+
+    simdata <- simul.int(seed = sim_seed, n = 200, p = 500,
+                  n.main = 2,
+                  n.int = 20,
+                  beta.main= 0.2, 
+                  beta.int = 3.00, 
+                  censparam = 1/30, 
+                  lambda = 1/1000)
+
+    # simdata <- simul.int(sim_seed, n = 500, p = 500,
+    #                       n.main = 2,
+    #                       n.int = 20,
+    #                       beta.main = 0.2, 
+    #                       beta.int = 0.4, 
+    #                       censparam = 1/5, 
+    #                       lambda = 1/100)
+
+    dat <- simdata$data
+
+
+
+    # survNPDR.glm.model <- sNPDR::npdr_surv_binomial_glm(
+    #         outcome = c("time_var" = "time", "status_var" = "status"),
+    #         dataset = dat, 
+    #         attr.diff.type = "standard",
+    #         nbd.method = "relieff", 
+    #         nbd.metric = "manhattan",
+    #         knn = k, 
+    #         msurf.sd.frac = 0.5, 
+    #         glmnet.alpha = 0.1, 
+    #         glmnet.lower = -Inf,
+    #         glmnet.lam = "lambda.1se",
+    #         use.glmnet = TRUE,
+    #         model.type = "binomial", 
+    #         KM.weight = FALSE,
+    #         KM.kernel.type = "gaussian",
+    #         KM.kernel.sigma = 1.0)
+
+    survNPDR.model <- sNPDR::npdr_surv_binomial(outcome = c("time_var" = "time", "status_var" = "status"),
+                      dataset = dat, 
+                      attr.diff.type = "standard",
+                      nbd.method = "relieff", 
+                      nbd.metric = "manhattan",
+                      knn = k, 
+                      msurf.sd.frac = 0.5, 
+                      glmnet.alpha = 1, 
+                      model.type = "binomial", 
+                      KM.weight = FALSE,
+                      KM.kernel.type = "gaussian",
+                      KM.kernel.sigma = 1.5)
+    # Arrange results by beta coefficient
+    survNPDR.model <- survNPDR.model |> arrange(desc(beta))
+
+    
+    # Extract features based on the top 10 beta coefficients
+    threshold <- quantile(survNPDR.model$beta, 0.90)
+
+    selected_features <- survNPDR.model$Feature[survNPDR.model$beta > threshold]
+
+    #browser()
+
+    
+    # Calculate true positives, false positives, false negatives
+    true_positives <- sum(selected_features %in% true_functional_features)
+    false_positives <- sum(!selected_features %in% true_functional_features)
+    false_negatives <- sum(!true_functional_features %in% selected_features)
+    
+    # Calculate precision and recall
+    precision <- true_positives / (true_positives + false_positives)
+    recall <- true_positives / (true_positives + false_negatives)
+    
+    # Store the results in the dataframe
+    results_df <- rbind(
+      results_df, 
+      data.frame(Replicate = i, K = k, Precision = precision, Recall = recall))
+
+    
+    # Print percentage completion
+    print(paste("Completed", (i / num_replicates) * 100, "% of the simulations."))
+
+    # Print the value of k
+    print(paste("Completed simulations for k =", k))
+  }
+}
+
+# View the results
+print(results_df)
+
+# Optionally save to a file
+write.csv(results_df, "precision_recall_k_values_results_with_simulation.csv", row.names = FALSE)
+
+# Load necessary libraries
+library(ggplot2)
+library(tidyr)
+
+# Reshape the results_df for plotting
+results_long <- results_df %>%
+  pivot_longer(cols = c("Precision", "Recall"), names_to = "Metric", values_to = "Value")
+
+# Create the plot with larger fonts
+ggplot(results_long, aes(x = Metric, y = Value, fill = as.factor(K))) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.7) +  # Boxplot without outliers
+  geom_jitter(width = 0.2, alpha = 0.5, size = 1.5) +  # Add jitter for individual points
+  scale_fill_brewer(palette = "Set2", name = "K") +  # Use a color palette for K
+  labs(
+    title = "Precision and Recall Across Different K Values",
+    x = "Metric (Precision/Recall)",
+    y = "Value"
+  ) +
+  theme_minimal(base_size = 25) +  # Set a larger base font size
+  theme(
+    legend.position = "top",  # Place legend at the top
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 30),  # Larger and bold title
+    axis.title.x = element_text(face = "bold", size = 28),  # Larger x-axis title
+    axis.title.y = element_text(face = "bold", size = 28),  # Larger y-axis title
+    axis.text.x = element_text(size = 22),  # Larger x-axis tick labels
+    axis.text.y = element_text(size = 22),  # Larger y-axis tick labels
+    legend.text = element_text(size = 22),  # Larger legend text
+    legend.title = element_text(face = "bold", size = 24)  # Larger and bold legend title
+  )
+
+  # Save the plot
+  # Save the plot
+ggsave("paper_tables/PR_K_interaction.png", width = 12, height = 8, dpi = 300)

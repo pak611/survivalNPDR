@@ -24,9 +24,11 @@ computeKM <- function(NN.df) {
   if (!requireNamespace("broom", quietly = TRUE)) {
     stop("Package 'broom' is required.")
   }
+
+  #browser()
   
   # Creating the survival object correctly
-  surv_obj <- survival::Surv(time = NN.df$time, event = as.numeric(NN.df$outcome))
+  surv_obj <- survival::Surv(time = NN.df$time, event = as.numeric(NN.df$status))
   
   # Compute the Kaplan-Meier estimate
   km_estimate <- survival::survfit(surv_obj ~ 1)

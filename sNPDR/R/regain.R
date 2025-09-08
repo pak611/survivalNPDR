@@ -9,6 +9,7 @@
 #' @return regainMatrix \code{matrix} of variable by variable regression coefficients.
 #' @export
 regain <- function(dats, depVarName, indVarNames, reg.fam="binomial", nCovs=0, excludeMainEffects=F){
+  #browser()
   
   # get the main effect raw coefs, std errs, pvals, standard coefs, and convergence indicators
   mains <- getMainEffects(dats, 
@@ -134,6 +135,7 @@ fitMainEffectModel <- function(labelledDataFrame, variableName, depVarName,
 #' @param excludeMainEffects \code{logical} indicating whether to exclude main effect terms.
 #' @param indVarNames Vector of independent variable names, to name output matrices
 #' @return \code{data.frame} with variable, convergence status, beta coefficient,
+#' @export
 #' p-value, standard error and standardized beta columns.
 # i.e. indVarNames = colnames(dats)[1:(ncol(dats) - nCovs - 1)] if the columns are organized as: independent vars, covars, pheno
 #

@@ -1,0 +1,156 @@
+Tumor sample	Status	Patient age (years)	Adjuvant therapy	Histological  type	 SBR Grade	Tumor size (mm)	pT (TNM)	Lymph node checked	N+	N dich+	pN (TNM)	ER	PR	Follow-up period (months)	Local recurrence 	Distant metastases	Time before recurrence (months)	State of health	Death cause	Decease delay  upon recurrence (months)	Decease delay after surgery (months)
+EB5012	RF	75.6	X-ray + Tam	IDC 	2	13	pT1	15	3	1	pN1	460	28	68.5				deceased	other cause 		68.5
+EB5015	RF	55.3	X-ray + Tam	IDC	1	15	pT1	22	1	1	pN1	39	80	99.9				alive			
+EB5018	RF	64.4	X-ray + Tam	IDC	2	15	pT1	5	1	1	pN1	26	83	137.5				alive			
+EB5019	RF	55.4	X-ray + Tam	IDC	1	20	pT2	9	1	1	pN1	79	143	142.3				alive			
+EB5020	RF	51.1	X-ray + Tam	IDC	1	10	pT1	10	2	1	pN1	26	210	167.4				alive			
+EB5024	RF	66.3	X-ray + Tam	IDC	2	13	pT1	7	2	1	pN1	316	134	65.8				alive			
+EB5029	RF	52.8	X-ray + Tam	ILC	NA	25	pT2	27	2	1	pN1	158	216	71.2				alive			
+EB5036	RF	72.9	X-ray + Tam	IDC	3	12	pT1	12	1	1	pN1	260	<10	106.6				alive			
+EB5037	RF	64.4	X-ray + Tam	IDC	1	18	pT1	19	0	0	pN0	107	<10	152				alive			
+EB5039	RF	78.9	X-ray + Tam	IDC	2	17	pT1	9	0	0	pN0	68	159	60.7				deceased	other cancer		60.7
+EB5044	RF	58.3	X-ray + Tam	IDC	1	19	pT1	8	1	1	pN1	194	56	86.8				alive			
+EB5048	RF	60.7	X-ray + Tam	IDC	2	12	pT1	21	2	1	pN1	37	21	100.2				alive			
+EB5050	RF	73.6	X-ray + Tam	IDC	2	21	pT2	13	2	1	pN1	135	<10	92.6				alive 			
+EB5051	RF	71	X-ray + Tam	IDC	3	32	pT2	9	1	1	pN1	91	137	81.2				alive 			
+ET4051	RF	70.4	Tam	IDC	2	18	pT1	NA	1	1	pN1	15% imm	15% imm	95.6				alive			
+ET4070	RF	72.9	Tam	IDC	2	23	pT2	NA	0	0	pN0	80% imm	80% imm	87.2				alive			
+ET4072	RF	65.5	Tam	IDC	2	19	pT1	NA	0	0	pN0	80% imm	80% imm	82.3				alive			
+ET4073	RF	50.5	Tam	IDC	2	22	pT2	NA	0	0	pN0	90% imm	90% imm	81.2				alive			
+ET4076	RF	78.7	Tam	IDC	2	14	pT1	NA	0	0	pN0	60% imm	60% imm	76.3				alive			
+ET4082	RF	51.2	Tam	IDC	1	13	pT1	NA	0	0	pN0	50% imm	50% imm	71.6				alive			
+ET4085	RF	71.7	Tam	IDC+ILC	2	25	pT2	NA	1	1	pN1	90% imm	90% imm	71				alive			
+ET4091	RF	69.6	Tam	ILC	2	11	pT1	NA	0	0	pN0	70% imm	70% imm	69.1				alive			
+ET4094	RF	60.1	Tam	ILC	2	15	pT1	NA	0	0	pN0	95% imm	95% imm	67.2				alive			
+VA4200	RF	61.1	X-ray+Tam	Other	2	NA	NA	14	3	1	pN1	109	15	118.5				deceased	other cause 		118.5
+VA4261	RF	73.4	X-ray+Tam	IDC	3	20	pT2	14	1	1	pN1	100	162	147.6				alive			
+VA4496	RF	46.6	X-ray+Tam+LHRH	ILC	2	20	pT2	12	0	0	pN0	10	139	145.2				alive			
+VA5084	RF	80	X-ray+Tam	ILC	NA	14	pT1	11	2	1	pN1	219	<10	137.9				alive			
+VA5086	RF	53	X-ray+Tam	Other	NA	15	pT1	8	0	0	pN0	13	146	107.5				deceased	other cause 		112
+VA5284	RF	45.9	X-ray+Tam+LHRH	IDC	2	20	pT2	8	1	1	pN1	16	<10	135.4				alive			
+VA5387	RF	56	X-ray+Tam	IDC	1	20	pT2	14	1	1	pN1	12	<10	134.2				alive			
+VA6204	RF	61.4	X-ray+Tam	IDC	2	18	pT1	11	0	0	pN0	158	490	123.4				alive			
+VA6349	RF	83.6	Tam	IDC	2	20	pT2	13	2	1	pN1	19	154	121.3				alive	
+VA6404	RF	78.2	Tam	IDC	2	30	pT2	10	0	0	pN0	87	805	120.4				alive	
+VA6586	RF	61.6	X-ray+Tam	IDC	2	20	pT2	9	0	0	pN0	427	513	117				alive	
+VA6603	RF	53.7	X-ray+Tam	IDC+ICC	2	10	pT1	11	0	0	pN0	26	16	119.1				alive	
+VA7299	RF	86.2	Tam	ILC	2	30	pT2	9	0	0	pN0	537	320	109.3				alive	
+VA7376	RF	73.4	X-ray+Tam	IDC	3	17	pT1	15	3	1	pN1	418	20	107.9				alive	
+VB0409	RF	76	Tam	IDC	3	18	pT1	4	0	0	pN0	52	16	70.4				alive	
+VB0412	RF	79.4	X-ray+Tam	Other	3	20	pT2	14	0	0	pN0	575	28	70.3				alive	
+VB0416	RF	72.9	X-ray+Tam	IDC	3	23	pT2	15	0	0	pN0	525	300	70.2				alive	
+VB0419	RF	68.2	X-ray+Tam	ILC	3	30	pT2	9	0	0	pN0	64	138	70.2				alive	
+VB0421	RF	53.6	X-ray+Tam	ILC	1	15	pT1	10	0	0	pN0	40	36	70.1				alive	
+VB0431	RF	77	X-ray+Tam	IDC	2	25	pT2	13	1	1	pN1	<10	23	12				deceased	other cause 
+VB0446	RF	77.9	X-ray+Tam	IDC	2	20	pT2	12	0	0	pN0	46	15	69.6				alive	
+VB0449	RF	78.9	X-ray+Tam	IDC	2	35	pT2	11	11	1	pN1	866	47	69.5				alive	
+VB0451	RF	57.5	X-ray+Tam	IDC	2	30	pT2	6	0	0	pN0	111	17	69.5				alive	
+VB0452	RF	73.8	X-ray+Tam	IDC	2	58	pT3	14	0	0	pN0	660	426	69.5				alive	
+VB0463	RF	57.7	X-ray+Tam	IDC	3	20	pT1	19	0	0	pN0	<10	11	69.1				alive
+VB0477	RF	79.8	Tam	IDC	2	25	pT2	15	0	0	pN0	184	41	68.8				alive
+VB0486	RF	59.6	X-ray+Tam	IDC	2	15	pT1	16	0	0	pN0	<10	39	68.6				alive
+VB0492	RF	53.3	X-ray+Tam	IDC	2	18	pT1	10	0	0	pN0	471	41	68.5				alive
+VB0501	RF	79.7	X-ray+Tam	IDC	2	20	pT2	14	1	1	pN1	500	222	68.2				alive
+VB0507	RF	50.2	X-ray+Tam+LHRH	IDC	1	12	pT1	6	0	0	pN0	64	76	68.1				alive
+VB0509	RF	68.3	X-ray+Tam	ILC	2	15	pT1	19	1	1	pN1	49	92	68				alive
+VB0513	RF	64.3	X-ray+Tam	IDC	2	20	pT1	11	2	1	pN1	169	145	67.9				alive
+VB0526	RF	68.7	X-ray+Tam	ILC	2	20	pT1	18	0	0	pN0	216	50	67.7				alive
+VB0539	RF	71.7	X-ray+Tam	ILC	NA	35	pT2	18	0	0	pN0	762	<10	67.3				alive
+VB0541	RF	66.1	X-ray+Tam	IDC	1	20	pT2	19	1	1	pN1	31	43	67.3				alive
+VB0546	RF	74.3	X-ray+Tam	IDC	2	18	pT1	14	0	0	pN0	25	39	67.2				alive
+VB1005	RF	49.5	X-ray+Tam+LHRH	IDC	2	28	pT2	17	0	0	pN0	111	713	66.6				alive
+VB1010	RF	60.4	X-ray+Tam	IDC+ICC	2	30	pT2	11	0	0	pN0	50	<10	66.5				alive
+VB1022	RF	43.7	X-ray+Tam+LHRH	IDC	1	16	pT1	10	0	0	pN0	15	360	66.1				alive
+VB1028	RF	42.6	X-ray+Tam+LHRH	IDC	1	18	pT1	NA	NA	NA	NA	71	15	66				alive
+VB1034	RF	75.3	X-ray+Tam	IDC	3	NA	pT2	15	0	0	pN0	488	786	65.9				alive
+VB1035	RF	66.9	X-ray+Tam	ILC	2	20	pT1	17	0	0	pN0	53	29	65.9				alive
+VB1038	RF	84.4	Tam	IDC	3	25	pT2	6	0	0	pN0	350	44	65.6				alive
+VB1042	RF	73.6	Tam	IDC	1	50	pT2	12	0	0	pN0	10	<10	65.5				alive
+VB1047	RF	65.4	X-ray+Tam	IDC	2	20	pT1	13	0	0	pN0	106	12	65.4				alive
+VB1048	RF	62.3	X-ray+Tam	ILC	2	30	pT2	16	0	0	pN0	78	83	65.3				alive
+VB1049	RF	70.1	X-ray+Tam	IDC	3	30	pT2	10	1	1	pN1	647	19	65.2				alive
+VB1055	RF	73	X-ray+Tam	ILC	2	15	pT1	10	0	0	pN0	166	376	65.1				alive
+VB1064	RF	71.2	X-ray+Tam	IDC	3	40	pT2	11	0	0	pN0	350	1198	64.9				alive
+VB1067	RF	64.9	X-ray+Tam	IDC	2	25	pT2	6	0	0	pN0	400	437	64.7				alive
+VB1073	RF	62.2	X-ray+Tam	IDC	2	17	pT1	2	0	0	pN0	53	181	64.6				alive
+VB1077	RF	61.8	X-ray+Tam	ILC	2	20	pT1	7	0	0	pN0	30	50	64.4				alive
+VB1088	RF	68.8	X-ray+Tam	IDC	2	25	pT2	13	0	0	pN0	197	348	64.1				alive
+VB1101	RF	75.4	X-ray+Tam	IDC	2	30	pT2	7	0	0	pN0	152	132	63.8				alive
+VB1122	RF	61.2	X-ray+Tam	IDC	2	12	pT1	9	0	0	pN0	50	136	63.3				alive
+VB1130	RF	74.8	X-ray+Tam	IDC+ILC	1	20	pT2	5	1	1	pN1	283	<10	63.1				alive
+VB1131	RF	76.6	X-ray+Tam	IDC+ILC	1	30	pT2	9	2	1	pN1	222	762	63.1				alive
+VB1140	RF	58.1	X-ray+Tam	ILC	2	25	pT2	15	0	0	pN0	124	46	62.9				alive
+VB1186	RF	80.9	Tam	IDC	3	25	pT2	8	0	0	pN0	140	425	61.7				alive
+VB1191	RF	69.4	X-ray+Tam	IDC	2	25	pT2	14	1	1	pN1	<10	172	61.5				alive
+VB1193	RF	76.5	Tam	IDC	2	50	pT3	10	0	0	pN0	232	309	61.5				alive
+VB1225	RF	72.1	Tam	IDC	1	25	pT2	15	0	0	pN0	325	228	60.9				alive
+VB1261	RF	64.8	X-ray+Tam	IDC	1	16	pT1	10	0	0	pN0	149	315	59.8				alive
+VB1262	RF	69.3	X-ray+Tam	ILC	2	30	pT2	19	5	1	pN1	45	27	59.7				alive
+VB1264	RF	67.3	X-ray+Tam	ILC	1	30	pT2	13	0	0	pN0	32	44	59.7				alive
+VB1285	RF	74.3	X-ray+Tam	IDC	2	30	pT2	17	6	1	pN1	106	333	58.9				alive
+VB1300	RF	62.1	X-ray+Tam	ILC	2	50	pT2	10	0	0	pN0	29	192	58.3				alive
+VB1322	RF	81	X-ray+Tam	IDC+ICC	2	30	pT2	5	2	1	pN1	180	153	57.8				alive
+VB1348	RF	76.1	Tam	IDC	1	NA	NA	2	0	0	pN0	<10	54	56.9				alive
+VB1356	RF	81.6	X-ray+Tam	IDC	2	25	pT2	ND	0	0	pN0	189	601	56.8				alive
+VB1357	RF	42.6	X-ray+Tam+LHRH	IDC	1	15	pT1	5	0	0	pN0	86	129	56.8				alive
+VB1359	RF	81.7	X-ray+Tam	IDC	2	20	pT1	13	0	0	pN0	129	12	56.5				alive
+VB1361	RF	62.8	X-ray+Tam	IDC	2	20	pT1	10	0	0	pN0	137	1097	56.4				alive			
+VB1362	RF	82.7	X-ray+Tam	Other	1	17	pT1	3	0	0	pN0	63	415	56.4				alive			
+VB1372	RF	52.7	X-ray+Tam	IDC	2	15	pT1	2	0	0	pN0	125	224	56.1				alive			
+VB1390	RF	79	X-ray+Tam	Other	2	43	pT2	13	3	1	pN1	198	115	55.8				alive			
+VB1391	RF	66.8	X-ray+Tam	IDC	2	20	pT2	11	0	0	pN0	283	1526	55.8				alive			
+VB1397	RF	66.3	X-ray+Tam	IDC	2	22	pT2	24	3	1	pN1	271	102	55.5				alive			
+VB1409	RF	73	X-ray+Tam	IDC	2	45	pT4	29	0	0	pN0	179	859	55.2				alive			
+VB1411	RF	62.7	X-ray+Tam	IDC	2	30	pT2	11	0	0	pN0	427	912	54.8				alive			
+EB5011	R	65.8	X-ray + Tam	IDC	2	9	pT1	NA	NA	NA	NA	223	<10	26.2		yes	28.1	deceased	other cancer		26.2
+EB5013	R	76.4	X-ray + Tam	IDC 	2	22	pT2	12	1	1	pN1	45	<10	55.5		yes	1.4	deceased	recurrence	54.1	55.5
+EB5014	R	66.3	X-ray + Tam	IDC	2	18	pT1	4	1	1	pN1	235	<10	44.8		yes	20.8	deceased	recurrence	24	44.8
+EB5016	R	57.4	X-ray + Tam	IDC	2	25	pT2	8	2	1	pN1	150	<10	57.4	yes	yes	40.6	deceased	recurrence	16.8	57.4
+EB5017	R	52.5	Tam	IDC	2	20	pT2	22	1	1	pN1	75	85	57.7		yes	35.8	deceased	recurrence	21.9	57.7
+EB5021	R	73.5	Tam	ILC	NA	20	pT2	31	29	1	pN1	34	128	39.4	yes	yes	37.1	deceased	recurrence	2.4	39.4
+EB5022	R	78.4	Tam	ILC	NA	30	pT2	15	1	1	pN1	192	67	46.4		yes	32.7	deceased	recurrence	13.7	46.4
+EB5023	R	86.1	X-ray + Tam	IDC	2	22	pT2	NA	NA	NA	NA	100% imm	40% imm	18		yes	19.9	deceased	other cause 		18
+EB5025	R	58.6	Tam	IDC	3	22	pT2	12	6	1	pN1	174	<10	46.1		yes	39.4	deceased	recurrence	6.7	46.1
+EB5026	R	66.8	X-ray + Tam	IDC	2	10	pT1	20	19	1	pN1	234	<10	50.2		yes	48.8	deceased	recurrence	1.4	50.2
+EB5027	R	77.8	X-ray + Tam	IDC	2	18	pT1	10	1	1	pN1	306	182	154.9	yes	yes	38.8	alive with meta			
+EB5028	R	83.7	Tam	IDC	2	20	pT2	8	1	1	pN1	136	255	48	yes	yes	7.8	deceased	recurrence	40.3	48
+EB5030	R	56.9	X-ray + Tam	IDC	2	20	pT2	19	5	1	pN1	79	<10	67.9	yes	yes	44.4	alive with meta			
+EB5031	R	75.8	X-ray + Tam	IDC	3	25	pT2	22	12	1	pN1	15	<10	34.2		yes	17.1	deceased	recurrence	17.1	34.2
+EB5032	R	77	Tam	IDC	3	30	pT2	13	4	1	pN1	41	49	58.4		yes	35	deceased	other cause 		58.4
+EB5033	R	57.5	X-ray + Tam	ILC	NA	45	pT2	23	23	1	pN1	479	16	79.8		yes	31.7	deceased	recurrence	48	79.8
+EB5034	R	69.3	X-ray + Tam	IDC	2	30	pT2	21	8	1	pN1	175	103	83.3	yes	yes	48.5	deceased	other cause		83.3
+EB5035	R	57.2	X-ray + Tam	IDC	3	18	pT1	10	6	1	pN1	33	234	25.9		yes	12.4	deceased	recurrence	13.6	25.9
+EB5038	R	71.1	Tam	IDC	3	22	pT2	21	0	0	pN0	26	11	82.1	yes	yes	56.5	alive with meta			
+EB5040	R	54.4	X-ray + Tam	IDC	3	23	pT2	14	1	1	pN1	33	<10	38.2		yes	26.8	deceased	recurrence	11.4	38.2
+EB5041	R	73.4	Tam	IDC	3	17	pT1	7	1	1	pN1	98	<10	50.4		yes	50.3	deceased	recurrence	0.1	50.4
+EB5042	R	56.6	X-ray + Tam	IDC	2	25	pT2	17	16	1	pN1	108	21	74.5	yes	yes	40.5	deceased	recurrence	34	74.5
+EB5043	R	57.6	X-ray + Tam	IDC	3	12	pT1	13	5	1	pN1	<10	16	60.8		yes	14.4	deceased	recurrence	46.4	60.8
+EB5046	R	52.1	X-ray + Tam	IDC	3	20	pT2	18	5	1	pN1	13	<10	69.4		yes	56.1	deceased	recurrence	13.4	69.4
+EB5047	R	73.1	X-ray + Tam	IDC	2	18	pT1	NA	NA	NA	NA	60	<10	60.6	yes	yes	46.1	deceased	recurrence	14.5	60.6
+EB5049	R	62.8	X-ray + Tam	IDC	3	20	pT2	18	0	0	pN0	52	45	57.2		yes	48.4	deceased	other cancer		57.2
+EB5052	R	71.4	X-ray + Tam	IDC	3	20	pT2	13	11	1	pN1	64	<10	99.1		yes	99.1	deceased	recurrence	0	99.1
+EB5053	R	53.5	X-ray + Tam	IDC	3	29	pT2	24	1	1	pN1	42	<10	67.5		yes	20.4	deceased	recurrence	47.2	67.5
+EB5054	R	70.7	Tam	IDC	3	31	pT2	21	5	1	pN1	12	<10	72.2		yes	46.1	deceased	recurrence	26.1	72.2
+EB5055	R	59.5	Tam	IDC	2	NA	ND	21	4	1	pN1	46	10	39.5	yes	yes	35.9	deceased	recurrence	3.6	39.5
+EB5056	R	56.5	X-ray + Tam	IDC	3	28	pT2	13	1	1	pN1	53	108	107.9		yes	94.8	alive with meta			
+EB5057	R	79.6	Tam	IDC	2	18	pT1	16	12	1	pN1	441	16	43.1		yes	41.3	deceased	recurrence	1.8	43.1
+EB5058	R	67.3	X-ray + Tam	IDC	3	25	pT2	9	2	1	pN1	54	<10	48.4		yes	35.2	deceased	recurrence	13.2	48.4
+EB5059	R	59.2	X-ray + Tam	IDC	2	25	pT2	14	4	1	pN1	11	<10	51.9		yes	15.5	deceased	other cause 		51.9
+VB1307	R	67.4	X-ray+Tam	ILC	2	25	pT2	10	0	0	pN0	64	21	58.1		yes	20.1	alive with meta			
+ET4068	R	74.2	Tam	IDC	2	15	pT1	NA	0	0	pN0	70% imm	70% imm	86.9	yes		31.9	alive with meta			
+ET4089	R	79.6	Tam	IDC	2	40	pT4	NA	NA	NA	NA	70% imm	70% imm	45.6		yes	32.3	 alive with meta 			
+VA4009	R	50.5	X-ray+Tam	IDC	3	30	pT2	17	1	1	pN1	81	375	136		yes	110.4	deceased	recurrence 	25.6	136
+VA4148	R	68.2	X-ray+Tam	IDC+ICC	2	20	pT2	10	0	0	pN0	179	78	42		yes	40.4	deceased	recurrence	1.6	42
+VA5345	R	76.6	X-ray+Tam	IDC	3	NA	NA	3	1	1	pN1	<10	21	68.9		yes	65.7	deceased	recurrence	3.3	68.9
+VA5678	R	65.2	X-ray+Tam	IDC	2	30	pT2	8	5	1	pN1	178	<10	131.3	yes	yes	40.5	alive with meta			
+VA6340	R	72.8	X-ray+Tam	ILC	2	25	pT2	8	0	0	pN0	52	285	89.3	yes		56.1	 alive with meta 			
+VA6660	R	65.7	X-ray+Tam	IDC+ICC	3	20	pT2	11	0	0	pN0	22	149	35.6		yes	10	deceased	recurrence	25.7	35.6
+VA7132	R	82.1	Tam	IDC	3	20	pT2	3	0	0	pN0	194	145	24		yes		deceased	recurrence 		
+VA7278	R	61.9	X-ray+Tam	IDC	2	18	pT1	15	0	0	pN0	67	342	109.8		yes	78.9	alive with meta			
+VA7280	R	69.9	X-ray+Tam	IDC+ICC	2	50	pT3	12	0	0	pN0	156	74	31.3		yes	30	alive with meta			
+VB0434	R	73.4	X-ray+Tam	IDC	2	30	pT2	18	7	1	pN1	139	43	46.8		yes	36.9	deceased	recurrence	9.9	46.8
+VB0488	R	58.9	X-ray+Tam	IDC	2	20	pT2	3	1	1	pN1	195	148	44.8		yes	27.8	deceased	recurrence	17	44.8
+VB0534	R	70.7	X-ray+Tam	ILC	2	30	pT2	13	0	0	pN0	29	19	35.5		yes	26.3	alive with meta 			
+VB1099	R	76.5	X-ray+Tam	IDC+ICC	2	15	pT1	10	9	1	pN1	253	41	63.8		yes	39.9	alive with meta			
+VB1165	R	59.9	X-ray+Tam	ILC	2	20	pT1	13	0	0	pN0	369	<10	62.2	yes		45.6	alive with meta			
+VB1218	R	92.4	X-ray+Tam	IDC	2	22	pT2	8	5	1	pN1	<10	13	61	yes		38.8	alive with meta			
