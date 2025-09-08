@@ -1,0 +1,6 @@
+# For testing sNPDR package
+
+getwd()
+#install.packages('devtools')
+
+devtools::document()

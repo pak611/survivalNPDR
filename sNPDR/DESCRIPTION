@@ -1,0 +1,34 @@
+Package: sNPDR
+Title: Survival Nearest-neighbor Projected-Distance Regression
+Version: 0.0.0.9000
+Authors@R: person("Patrick, Kampmeyer", email = "pak611@utulsa.edu", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+Depends: R (>= 3.3.2)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr, 
+    survival,
+    broom,
+    rlang,
+    PRROC,
+    glmnet
+Suggests: 
+    knitr,
+    CORElearn,
+    speedglm,
+    ggplot2,
+    doParallel,
+    parallel,
+    foreach,
+    flexclust,
+    glmnet,
+    rmarkdown,
+    wordspace,
+    tibble,
+    tidyr,
+    testthat (>= 3.0.0)
+RoxygenNote: 7.3.1
+VignetteBuilder: knitr
+Config/testthat/edition: 3
