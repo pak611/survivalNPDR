@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^NEWS\.Rmd$
+^cran-comments\.md$
+^README\.md$
+^CRAN-RELEASE$
+^doc$
+^Meta$
