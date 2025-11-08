@@ -3,7 +3,7 @@
 Survival extension of Nearest-neighbor Projected Distance Regression (NPDR) for ranking features by association with time-to-event outcomes.
 
 ## Key Functions
-`npdr_surv_binomial()` (univariate) and `npdr_surv_binomial_glm()` (penalized) score features using neighbor-based difference regression and survival time + status.
+`npdr_surv_binomial()` and `npdr_surv_binomial_glm()` (penalized) score features using neighbor-based difference regression and survival time + status.
 
 ## Script Summary (`tests/`)
 - `main/main_effects.r`: Benchmark on simulated main-effect data.
@@ -33,4 +33,5 @@ head(res)
 ```
 
 ## Contact
+
 
