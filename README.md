@@ -1,4 +1,4 @@
-# sNPDR
+# Survival NPDR
 
 Survival extension of Nearest-neighbor Projected Distance Regression (NPDR) for ranking features by association with time-to-event outcomes.
 
@@ -33,3 +33,4 @@ head(res)
 ```
 
 ## Contact
+
