@@ -1,5 +1,5 @@
 # Editor/OS
-.DS_Store
+*.DS_Store
 .Rhistory
 .RData
 .Rproj.user/
@@ -13,6 +13,9 @@ data/*
 !data/README.md
 !data/.gitkeep
 cox_epistasis/
+
+# Config files not needed in repo
+.lintr
 
 # Generated artifacts
 paper_graphics/*.pdf

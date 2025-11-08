@@ -1,4 +1,0 @@
-linters: with_defaults(
-  line_length_linter = line_length_linter(120)
-)
-exclusions: list("R/legacy_code.R")
