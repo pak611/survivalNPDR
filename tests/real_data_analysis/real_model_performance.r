@@ -6,10 +6,10 @@ library(survival)
 library(survivalsvm)
 
 # Load sNPDR package and data
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
-dat <- readRDS("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/data/GSE_2034/dat.rds")
-#dat <- readRDS("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/data/GSE_2990/dat.rds")
-#dat <- readRDS("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/data/GSE_9893/dat.rds")
+library(rprojroot)
+root <- getwd()
+devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
+dat <- readRDS(file.path(root, "survival_NPDR/data", "GSE2034", "dat.rds"))
 dat <- as.data.frame(dat)
 dat <- dat %>% filter(!is.na(time) & !is.na(status))
 
@@ -57,7 +57,7 @@ calculate_metrics <- function(dat, risk_scores, beta_coefficients, model_name) {
                     Hazard_Ratio = hazard_ratio, Num_Weights = num_weights))
 }
 
------------------------------------- survNPDR ------------------------------------
+#------------------------------------ survNPDR ------------------------------------
 survNPDR <- sNPDR::npdr_surv_binomial(outcome = c("time_var" = "time", "status_var" = "status"),
                                        dataset = dat, attr.diff.type = "standard",
                                        nbd.method = "multisurf", nbd.metric = "manhattan",

@@ -1,6 +1,5 @@
- 
- 
- # Load necessary libraries
+
+# Load necessary libraries
 library(survival)
 library(dplyr)
 library(tibble)
@@ -12,15 +11,19 @@ library(PRROC)
 library(R.utils)
 library(ggplot2)
 library(gridExtra)
+library(ranger)
+library(coxed)
 
 # Load custom simulation function
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/simSurvData/cox_epistasis")
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
+root <- getwd()
+devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
+
+
 
 # Simulation parameters
 sim_seed <- 2467
 n <- 200
-p <- 500
+p <- 1000
 n_main <- 2
 n_int <- 50
 beta_main <- 0.1
@@ -92,7 +95,7 @@ for (fold_idx in seq_along(k_folds)) {
                                 KM.weight = FALSE,
                                 KM.kernel.type = "gaussian",
                                 KM.kernel.sigma = 0.25)
-    }, timeout = 20, onTimeout = "silent")
+  }, timeout = 40, onTimeout = "silent")
   })[3]  # Extract elapsed time
 
   if (is.null(survNPDR.model)) {
@@ -150,7 +153,7 @@ for (fold_idx in seq_along(k_folds)) {
         KM.weight = FALSE,
         KM.kernel.type = "gaussian",
         KM.kernel.sigma = 1.0)
-    }, timeout = 20, onTimeout = "silent")
+    }, timeout = 40, onTimeout = "silent")
   })[3]  # Extract elapsed time
 
   if (is.null(survNPDR.model.glm)) {
@@ -191,57 +194,57 @@ for (fold_idx in seq_along(k_folds)) {
 
 
    
- survNPDR_KM_runtime <- system.time({
-    survNPDR_KM.model <- withTimeout({
-      sNPDR::npdr_surv_binomial(outcome = c("time_var" = "time", "status_var" = "status"),
-                                dataset = train_data, 
-                                attr.diff.type = "standard",
-                                nbd.method = "relieff", 
-                                nbd.metric = "manhattan",
-                                knn = 20, 
-                                msurf.sd.frac = 0.5, 
-                                glmnet.alpha = 1, 
-                                model.type = "binomial", 
-                                KM.weight = TRUE,  # Enabled KM weighting
-                                KM.kernel.type = "gaussian",
-                                KM.kernel.sigma = 0.25)
-    }, timeout = 20, onTimeout = "silent")
-  })[3]  
+#  survNPDR_KM_runtime <- system.time({
+#     survNPDR_KM.model <- withTimeout({
+#       sNPDR::npdr_surv_binomial(outcome = c("time_var" = "time", "status_var" = "status"),
+#                                 dataset = train_data, 
+#                                 attr.diff.type = "standard",
+#                                 nbd.method = "relieff", 
+#                                 nbd.metric = "manhattan",
+#                                 knn = 20, 
+#                                 msurf.sd.frac = 0.5, 
+#                                 glmnet.alpha = 1, 
+#                                 model.type = "binomial", 
+#                                 KM.weight = TRUE,  # Enabled KM weighting
+#                                 KM.kernel.type = "gaussian",
+#                                 KM.kernel.sigma = 0.25)
+#     }, timeout = 20, onTimeout = "silent")
+#   })[3]  
 
-    if (is.null(survNPDR.model)) {
-    cat("survNPDR model timed out\n")
-    next
-  }
+#     if (is.null(survNPDR.model)) {
+#     cat("survNPDR model timed out\n")
+#     next
+#   }
 
   
-  threshold <- quantile(survNPDR.model$p.adj, 0.90)
-  survNPDR.model <- survNPDR.model %>% filter(p.adj < threshold) %>% arrange(desc(abs(beta)))
+  # threshold <- quantile(survNPDR.model$p.adj, 0.90)
+  # survNPDR.model <- survNPDR.model %>% filter(p.adj < threshold) %>% arrange(desc(abs(beta)))
 
-  top.features <- survNPDR.model$Feature[1:50]
-  top.coefficients <- survNPDR.model$beta[1:50]
+  # top.features <- survNPDR.model$Feature[1:50]
+  # top.coefficients <- survNPDR.model$beta[1:50]
 
-  X_train <- train_data %>% select(one_of(top.features)) %>% as.matrix()
-  X_test <- test_data %>% select(one_of(top.features)) %>% as.matrix()
+  # X_train <- train_data %>% select(one_of(top.features)) %>% as.matrix()
+  # X_test <- test_data %>% select(one_of(top.features)) %>% as.matrix()
 
-  linear.predictor <- X_test %*% as.numeric(top.coefficients)
-  relative.risk <- exp(linear.predictor)
+  # linear.predictor <- X_test %*% as.numeric(top.coefficients)
+  # relative.risk <- exp(linear.predictor)
 
-  # Calculate C-index for survNPDR
-  c.ind.survNPDR <- concordance.index(x = relative.risk, surv.time = test_data$time, surv.event = test_data$status)
+  # # Calculate C-index for survNPDR
+  # c.ind.survNPDR <- concordance.index(x = relative.risk, surv.time = test_data$time, surv.event = test_data$status)
 
 
-   # Generate PRC curve for AUC
-  functional.vars <- grep("intervar", colnames(dat), value = TRUE)
-  idx_func <- which(survNPDR.model$Feature %in% functional.vars)
-  func_betas <- survNPDR.model$beta[idx_func]
-  neg_betas <- survNPDR.model$beta[-idx_func]
-  pr_curve_survNPDR <- PRROC::pr.curve(scores.class0 = abs(func_betas), scores.class1 = abs(neg_betas), curve = TRUE)
-  auc_survNPDR <- pr_curve_survNPDR$auc.integral
+  #  # Generate PRC curve for AUC
+  # functional.vars <- grep("intervar", colnames(dat), value = TRUE)
+  # idx_func <- which(survNPDR.model$Feature %in% functional.vars)
+  # func_betas <- survNPDR.model$beta[idx_func]
+  # neg_betas <- survNPDR.model$beta[-idx_func]
+  # pr_curve_survNPDR <- PRROC::pr.curve(scores.class0 = abs(func_betas), scores.class1 = abs(neg_betas), curve = TRUE)
+  # auc_survNPDR <- pr_curve_survNPDR$auc.integral
 
-  # Add survNPDR results to errors
-  errors <- rbind(errors, data.frame(method = "sNPDR_KM", fold = fold_idx, c_index = c.ind.survNPDR$c.index,
-                                     auc = auc_survNPDR, runtime = survNPDR_runtime,
-                                     n = n, p = p, n_main = n_main, n_int = n_int, beta_main = beta_main, beta_int = beta_int, censparam = censparam, lambda = lambda))
+  # # Add survNPDR results to errors
+  # errors <- rbind(errors, data.frame(method = "sNPDR_KM", fold = fold_idx, c_index = c.ind.survNPDR$c.index,
+  #                                    auc = auc_survNPDR, runtime = survNPDR_runtime,
+  #                                    n = n, p = p, n_main = n_main, n_int = n_int, beta_main = beta_main, beta_int = beta_int, censparam = censparam, lambda = lambda))
                                      
   # Cox Regression
   cox_runtime <- system.time({
@@ -348,48 +351,133 @@ for (fold_idx in seq_along(k_folds)) {
   errors <- rbind(errors, data.frame(method = "SVM", fold = fold_idx, c_index = c.ind.svm$c.index,
                                      auc = auc_svm, runtime = svm_runtime,
                                      n = n, p = p, n_main = n_main, n_int = n_int, beta_main = beta_main, beta_int = beta_int, censparam = censparam, lambda = lambda))
+
+    ##################
+  ### Ranger (Random Survival Forest)
+  ranger_runtime <- system.time({
+    ranger.model <- withTimeout({
+      ranger(Surv(time, status) ~ ., data = train_data,
+             num.trees = 500, mtry = floor(sqrt(ncol(attr_train))),
+             splitrule = "logrank", importance = "permutation")
+    }, timeout = 20, onTimeout = "silent")
+  })[3]
+
+  if (!is.null(ranger.model)) {
+  
+
+    ranger_importance <- ranger.model$variable.importance
+    ranger_importance <- sort(ranger_importance, decreasing = TRUE)
+    top.features.ranger <- names(ranger_importance)[1:50]
+    top.importance.ranger <- ranger_importance[top.features.ranger]
+
+    idx_func <- which(top.features.ranger %in% functional.vars)
+    func_importance <- top.importance.ranger[idx_func]
+    neg_importance <- top.importance.ranger[-idx_func]
+    pr_curve_ranger <- PRROC::pr.curve(scores.class0 = abs(func_importance), scores.class1 = abs(neg_importance), curve = TRUE)
+    auc_ranger <- pr_curve_ranger$auc.integral
+
+    X_test <- test_data %>% select(all_of(top.features.ranger)) %>% as.matrix()
+    linear.predictor.ranger <- X_test %*% as.numeric(top.importance.ranger)
+    relative.risk.ranger <- exp(linear.predictor.ranger) %>% as.vector()
+    c.ind.ranger <- concordance.index(x = relative.risk.ranger, surv.time = test_data$time, surv.event = test_data$status)
+
+    errors <- rbind(errors, data.frame(method = "Ranger", fold = fold_idx, c_index = c.ind.ranger$c.index,
+                                       auc = auc_ranger, runtime = ranger_runtime,
+                                       n = n, p = p, n_main = n_main, n_int = n_int, beta_main = beta_main, beta_int = beta_int, censparam = censparam, lambda = lambda))
+  }
 }
 
 
 # Summarize cross-validation results
 results_summary <- errors %>% 
-  group_by(method, n, p, n_main, n_int, beta_main, beta_int, censparam, lambda) %>% 
-  summarise(mean_c_index = mean(c_index, na.rm = TRUE), 
-            median_c_index = median(c_index, na.rm = TRUE),
-            sd_c_index = sd(c_index, na.rm = TRUE),
-            mean_auc = mean(auc, na.rm = TRUE),
-            median_auc = median(auc, na.rm = TRUE),
-            sd_auc = sd(auc, na.rm = TRUE),
-            mean_runtime = mean(runtime, na.rm = TRUE),
-            median_runtime = median(runtime, na.rm = TRUE),
-            sd_runtime = sd(runtime, na.rm = TRUE))
+    group_by(method, n, p, n_main, n_int, beta_main, beta_int, censparam, lambda) %>% 
+    summarise(mean_c_index = mean(c_index, na.rm = TRUE), 
+                        median_c_index = median(c_index, na.rm = TRUE),
+                        sd_c_index = sd(c_index, na.rm = TRUE),
+                        mean_auc = mean(auc, na.rm = TRUE),
+                        median_auc = median(auc, na.rm = TRUE),
+                        sd_auc = sd(auc, na.rm = TRUE),
+                        mean_runtime = mean(runtime, na.rm = TRUE),
+                        median_runtime = median(runtime, na.rm = TRUE),
+                        sd_runtime = sd(runtime, na.rm = TRUE))
 
 print(results_summary)
 
 # Save the results summary to a CSV file
-write.csv(results_summary, "paper_tables/results_summary_interactions.csv", row.names = FALSE)
+write.csv(results_summary, file.path(root, "survival_NPDR/paper_tables/results_summary_interactions_with_ranger.csv"), row.names = FALSE)
 
 # ----------------- PLOTTING C-INDEX AND AUC -----------------
 # Load necessary library for color palette
 library(RColorBrewer)
 
-# Filter out sNPDR_KM from the errors data frame
-errors <- errors %>% filter(method != "sNPDR_KM")
 
-# Define a unified y-axis range
-y_axis_range <- range(c(errors$c_index, errors$auc), na.rm = TRUE)
+
+# Do not exclude sNPDRL from the errors data frame so it appears in the plots
+errors_filtered <- errors %>% filter(!method %in% c("sNPDR_KM"))
+
+# Define a unified y-axis range based on the filtered data
+y_axis_range <- range(c(errors_filtered$c_index, errors_filtered$auc), na.rm = TRUE)
 
 # Create the C-index boxplot
-c_index_plot <- ggplot(errors, aes(x = method, y = c_index)) +
+c_index_plot <- ggplot(errors_filtered, aes(x = method, y = c_index)) +
+    geom_boxplot(aes(fill = method), outlier.shape = NA, alpha = 0.7) +
+    geom_jitter(width = 0.2, size = 3, alpha = 0.6) +
+    stat_summary(fun = mean, geom = "text", aes(label = round(..y.., 2)), 
+                vjust = -3.5, size = 10, color = "black") +
+    labs(title = NULL,
+        x = NULL,  # Specify NULL for no X label
+        y = "C-index") +
+    scale_fill_brewer(palette = "Set2") +  # Updated color scheme
+    coord_cartesian(ylim = y_axis_range) +  # Set unified y-axis range
+    theme_minimal() +
+    theme(
+        plot.title = element_text(size = 20, face = "bold"),
+        axis.title = element_text(size = 30, face = "bold"),  # Increased axis title size
+        axis.text = element_text(size = 28),  # Increased axis text size
+        axis.text.x = element_text(size = 36, face = "bold"),  # Increased X-axis text size
+        axis.text.y = element_text(size = 36),  # Increased Y-axis text size
+        legend.position = "none",
+        panel.border = element_rect(color = "black", fill = NA, size = 1.5)
+    )
+
+# Create the AUC boxplot
+auc_plot <- ggplot(errors_filtered, aes(x = method, y = auc)) +
+    geom_boxplot(aes(fill = method), outlier.shape = NA, alpha = 0.7) +
+    geom_jitter(width = 0.2, size = 3, alpha = 0.6) +
+    stat_summary(fun = mean, geom = "text", aes(label = round(..y.., 2)), 
+                vjust = -2.5, size = 10, color = "black") +  # Adjusted vjust to bring means even higher
+    labs(title = NULL,
+        x = NULL,
+        y = "AUC") +
+    scale_fill_brewer(palette = "Set2") +  # Updated color scheme
+    coord_cartesian(ylim = y_axis_range) +  # Set unified y-axis range
+    theme_minimal() +
+    theme(
+        plot.title = element_text(size = 20, face = "bold"),
+        axis.title = element_text(size = 36, face = "bold"),  # Increased axis title size
+        axis.text = element_text(size = 34),  # Increased axis text size
+        axis.text.x = element_text(size = 36, face = "bold"),  # Increased X-axis text size
+        legend.position = "none",
+        panel.border = element_rect(color = "black", fill = NA, size = 1.5)
+    )
+
+# Arrange the plots side by side
+combined_plot <- grid.arrange(c_index_plot, auc_plot, ncol = 2)
+
+# Save the combined plot with increased width
+ggsave(file.path(root, "survival_NPDR/paper_graphics/c_index_auc_boxplot_filtered.png"), plot = combined_plot, width = 20, height = 20)
+
+# --- C-INDEX ONLY PLOT ---
+c_index_only_plot <- ggplot(errors_filtered, aes(x = method, y = c_index)) +
   geom_boxplot(aes(fill = method), outlier.shape = NA, alpha = 0.7) +
   geom_jitter(width = 0.2, size = 3, alpha = 0.6) +
   stat_summary(fun = mean, geom = "text", aes(label = round(..y.., 2)), 
-               vjust = -3.5, size = 10, color = "black") +  # Adjusted vjust to bring means even higher
+        vjust = -3.5, size = 10, color = "black") +
   labs(title = NULL,
-       x = NULL,  # Specify NULL for no X label
-       y = "C-index") +
+    x = NULL,  # Specify NULL for no X label
+    y = "C-index") +
   scale_fill_brewer(palette = "Set2") +  # Updated color scheme
-  coord_cartesian(ylim = y_axis_range) +  # Set unified y-axis range
+  coord_cartesian(ylim = range(errors_filtered$c_index, na.rm = TRUE)) +  # Set y-axis range for c-index only
   theme_minimal() +
   theme(
     plot.title = element_text(size = 20, face = "bold"),
@@ -401,32 +489,9 @@ c_index_plot <- ggplot(errors, aes(x = method, y = c_index)) +
     panel.border = element_rect(color = "black", fill = NA, size = 1.5)
   )
 
-# Create the AUC boxplot
-auc_plot <- ggplot(errors, aes(x = method, y = auc)) +
-  geom_boxplot(aes(fill = method), outlier.shape = NA, alpha = 0.7) +
-  geom_jitter(width = 0.2, size = 3, alpha = 0.6) +
-  stat_summary(fun = mean, geom = "text", aes(label = round(..y.., 2)), 
-               vjust = -2.5, size = 10, color = "black") +  # Adjusted vjust to bring means even higher
-  labs(title = NULL,
-       x = NULL,
-       y = "AUC") +
-  scale_fill_brewer(palette = "Set2") +  # Updated color scheme
-  coord_cartesian(ylim = y_axis_range) +  # Set unified y-axis range
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 20, face = "bold"),
-    axis.title = element_text(size = 36, face = "bold"),  # Increased axis title size
-    axis.text = element_text(size = 34),  # Increased axis text size
-    axis.text.x = element_text(size = 36, face = "bold"),  # Increased X-axis text size
-    legend.position = "none",
-    panel.border = element_rect(color = "black", fill = NA, size = 1.5)
-  )
+c_index_only_plot
 
-# Arrange the plots side by side
-combined_plot <- grid.arrange(c_index_plot, auc_plot, ncol = 2)
-
-# Save the combined plot with increased width
-ggsave("paper_graphics/c_index_auc_boxplot_updated_interactions.png", plot = combined_plot, width = 20, height = 20)
+ggsave(file.path(root, "survival_NPDR/paper_graphics/c_index_boxplot_filtered2.png"), plot = c_index_only_plot, width = 10, height = 10)
 
 # Print results
-print(errors)
+print(errors_filtered)

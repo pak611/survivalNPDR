@@ -1,3 +1,68 @@
+#' Survival-aware NPDR with per-feature binomial GLM
+#' Compute per-feature logistic regression coefficients on nearest-neighbor
+#' (NPDR) attribute differences for right-censored outcomes. Builds a pairwise
+#' design matrix from k-NN neighborhoods and fits univariate binomial GLMs for
+#' each feature. Optionally applies Kaplan–Meier kernel weights to differences.
+#'
+#' @param outcome Named character vector of length 2 with names `time_var` and
+#'   `status_var` giving the column names in `dataset` for survival time and
+#'   event status (1 = event, 0 = censored).
+#' @param dataset Data.frame containing predictors and the two outcome columns.
+#' @param attr.diff.type Character, passed to [sNPDR::npdrDiff()], e.g.,
+#'   "numeric-abs" (default).
+#' @param nbd.method Neighborhood construction method passed to
+#'   [sNPDR::nearestNeighbors()] (e.g., "relieff", "msurf", "all-pairs").
+#' @param nbd.metric Distance metric for neighbor search (e.g., "manhattan",
+#'   "euclidean").
+#' @param knn Integer; number of nearest neighbors per instance. If 0, the
+#'   behavior follows the chosen `nbd.method` defaults.
+#' @param msurf.sd.frac Numeric; standard-deviation fraction for msurf
+#'   neighborhood pruning.
+#' @param glmnet.alpha Reserved for API compatibility; not used here.
+#' @param glmnet.lower Reserved for API compatibility; not used here.
+#' @param lambda.grid Reserved for API compatibility; not used here.
+#' @param model.type Reserved for API compatibility; not used here.
+#' @param KM.weight Logical; if TRUE apply Kaplan–Meier based kernel weights to
+#'   attribute differences.
+#' @param KM.kernel.type Kernel type for survival weighting: "gaussian" or
+#'   "linear".
+#' @param KM.kernel.sigma Numeric sigma for the Gaussian kernel when
+#'   `KM.kernel.type = "gaussian"`.
+#'
+#' @return A data.frame with one row per feature containing GLM summary
+#'   statistics. Columns include: `Feature`, `beta` (Estimate), `Std. Error`,
+#'   `z value`, `Pr(>|z|)`, and `p.adj` (Bonferroni adjusted p-value). Rows are
+#'   sorted by `beta` decreasing.
+#'
+#' @details Pairs (Ri, NN) with `NN_time <= Ri_time` and `NN_status == 0` are
+#'   filtered to respect censoring. Kaplan–Meier survival probabilities are
+#'   estimated per node of each pair and combined via a kernel to weight the
+#'   attribute differences when `KM.weight = TRUE`.
+#'
+#' @examples
+#' \dontrun{
+#' set.seed(1)
+#' n <- 80; p <- 6
+#' X <- as.data.frame(matrix(rnorm(n*p), n, p))
+#' names(X) <- paste0('x', 1:p)
+#' dat <- cbind(X,
+#'              time = rexp(n, rate = 0.1),
+#'              status = rbinom(n, 1, 0.7))
+#'
+#' res <- npdr_surv_binomial(
+#'   outcome = c(time_var = 'time', status_var = 'status'),
+#'   dataset = dat,
+#'   knn = 10,
+#'   KM.weight = FALSE
+#' )
+#' head(res)
+#' }
+#'
+#' @seealso [sNPDR::nearestNeighbors()], [sNPDR::npdrDiff()],
+#'   [glmnet::cv.glmnet()], [stats::glm]
+#' @importFrom dplyr select mutate case_when
+#' @importFrom stats glm binomial na.omit p.adjust
+#' @export
 npdr_surv_binomial <- function(outcome = c("time_var" = "time", 
                                               "status_var" = "status"),
                                   dataset, 
@@ -13,8 +78,6 @@ npdr_surv_binomial <- function(outcome = c("time_var" = "time",
                                   KM.weight      = FALSE, 
                                   KM.kernel.type = "gaussian", 
                                   KM.kernel.sigma = 1.0) {
-
-    #browser()
 
     # Record the start time
     start_time <- Sys.time()
@@ -45,8 +108,6 @@ npdr_surv_binomial <- function(outcome = c("time_var" = "time",
                                              nbd.method = nbd.method,
                                              nbd.metric = nbd.metric)
     
-    
-
     
     Ri.pheno.vals <- dataset[knn_edge_list$Ri_idx, c(time_var, status_var)]
     NN.pheno.vals <- dataset[knn_edge_list$NN_idx, c(time_var, status_var)]
@@ -88,9 +149,6 @@ npdr_surv_binomial <- function(outcome = c("time_var" = "time",
                    NN_time = dataset[NN_idx, time_var],
                    Ri_status = dataset[Ri_idx, status_var],
                    NN_status = dataset[NN_idx, status_var])
-
-
-    
 
 
      # Filter out pairs where NN_time < Ri_time and NN_status == 0
@@ -157,7 +215,6 @@ npdr_surv_binomial <- function(outcome = c("time_var" = "time",
 
             # Sort the results by the absolute value of beta (importance)
             results_df <- results_df[order(results_df$beta, decreasing = TRUE), ]
-
 
     
     # Return the results

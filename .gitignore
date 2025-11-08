@@ -1,2 +1,19 @@
+# Editor/OS
+.DS_Store
+.Rhistory
+.RData
+.Rproj.user/
 .vscode/
-data/GSM_data/
+
+# RStudio project files
+*.Rproj
+
+# Large data: keep out of Git. Provide a small README instead.
+data/*
+!data/README.md
+
+# Generated artifacts
+paper_graphics/*.pdf
+paper_graphics/*.png
+paper_graphics/*.svg
+paper_tables/*.tmp

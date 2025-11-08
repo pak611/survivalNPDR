@@ -1,150 +1,143 @@
 
-
+library(ggplot2)
 # Testing k for main effects
 
 # Load necessary libraries and your custom functions
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/simSurvData/cox_epistasis")
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
-
+root <- getwd()
+devtools::load_all(file.path(root, "survival_NPDR/cox_epistasis"))
+devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
 
 
 # Assuming the true positives are known
 true_functional_features <- paste0("simvar", 1:50)  # True functional features for this simulation
 
-# Initialize a data frame to store precision, recall, and k for each replicate
-results_df <- data.frame()
-
 # Number of replicates
 num_replicates <- 20
 
-# Parameters for the simulation
-ran_seed <- 8675309
-num_features <- 500
-num_samples <- 200
-num_functional <- 50
-censor <- 0.7
+# Generate a list of random seeds based on a single seed
+set.seed(2467)
+sim_seeds <- sample(1:10000, num_replicates)
+n <- 200
+p <- 500
+n_main <- 50
+n_int <- 2
+beta_main <- 0.7
+beta_int <- 0.01
+censparam <- 1/4
+lambda <- 1/1000
+
+# initialize the errors dataframe
+errors <- data.frame(K = integer(), Replicate = integer(), AUC = numeric())
+
 
 # Define multiple values of k (neighbors)
-k_values <- c(5, 20, 100, num_samples - 1) 
+k_values <- c(5, 20, 100, n - 1, n)
 
-# Loop over k values
+
 for (k in k_values) {
-  
-  # Loop for running the model 100 times for each k
   for (i in 1:num_replicates) {
 
     #browser()
-    
-    # Simulate a new dataset for each replicate
-    betas <- withr::with_seed(seed = ran_seed, 
-                              c(runif(num_functional, min = 0.25, max = 0.55),
-                                runif(num_features - num_functional, min = 0.0001, max = 0.001)))
 
-    sim_seed <- 2468 + i  # Ensure a different seed for each replicate
-    simdata <- withr::with_seed(seed = sim_seed,
-                                sim.survdata(N = num_samples, T = 20, num.data.frames = 1, 
-                                             covariate = 1:num_functional, low = 0, high = 1, 
-                                             beta = betas, interactions = FALSE, xvars = num_features, mu = 0,
-                                             sd = c(rep(0.1, num_functional), rep(1, num_features - num_functional)),
-                                             censor = censor))
-    
-    # Rename functional variables for readability
-    new_names <- paste0("simvar", 1:num_functional)
-    old_names <- paste0("X", 1:num_functional)
-    names(old_names) <- new_names
+    # Simulate data
+    simdata <- simul.int(sim_seeds[i], n = n, p = p,
+                         n.main = n_main,
+                         n.int = n_int,
+                         beta.main = beta_main, 
+                         beta.int = beta_int, 
+                         censparam = censparam, 
+                         lambda = lambda)
 
-    # Clean up the dataset by renaming variables
-    dat <- simdata$data |> 
-      mutate(status = ifelse(failed == TRUE, 1, 0)) |> 
-      rename(time = "y") |> 
-      select(all_of(c("time", "status", paste0("X", 1:num_features)))) |> 
-      rename(all_of(old_names))
+    dat <- simdata$data
 
+    # Choose method based on whether k is numeric or "adaptive"
+    if (k == n) {
+      nbd_method <- "multisurf"
+      knn <- NULL  # multisurf does not use fixed k
+    } else {
+      nbd_method <- "relieff"
+      knn <- as.numeric(k)
+    }
 
-    survNPDR.glm.model <- sNPDR::npdr_surv_binomial_glm(
-            outcome = c("time_var" = "time", "status_var" = "status"),
-            dataset = dat, 
-            attr.diff.type = "standard",
-            nbd.method = "relieff", 
-            nbd.metric = "manhattan",
-            knn = k, 
-            msurf.sd.frac = 0.5, 
-            glmnet.alpha = 0.9, 
-            glmnet.lower = -Inf,
-            glmnet.lam = "lambda.1se",
-            use.glmnet = TRUE,
-            model.type = "binomial", 
-            KM.weight = FALSE,
-            KM.kernel.type = "gaussian",
-            KM.kernel.sigma = 1.0)
-    
-    # Extract features based on the top 10 beta coefficients
-    threshold <- quantile(survNPDR.glm.model$beta, 0.85)
+    # Call survival NPDR
+    survNPDR.model <- sNPDR::npdr_surv_binomial(
+      outcome = c("time_var" = "time", "status_var" = "status"),
+      dataset = dat, 
+      attr.diff.type = "standard",
+      nbd.method = nbd_method, 
+      nbd.metric = "manhattan",
+      knn = k,  # NULL for multisurf
+      msurf.sd.frac = 0.5, 
+      glmnet.alpha = 1, 
+      model.type = "binomial", 
+      KM.weight = FALSE,
+      KM.kernel.type = "gaussian",
+      KM.kernel.sigma = 1.5)
 
-    selected_features <- survNPDR.glm.model$Feature[survNPDR.glm.model$beta > threshold]
+    # Generate AUC
+    functional.vars <- grep("simvar", colnames(dat), value = TRUE)
+    idx_func <- which(survNPDR.model$Feature %in% functional.vars)
+    func_betas <- survNPDR.model$beta[idx_func]
+    neg_betas <- survNPDR.model$beta[-idx_func]
+    pr_curve_survNPDR <- PRROC::pr.curve(scores.class0 = abs(func_betas), scores.class1 = abs(neg_betas), curve = TRUE)
+    auc_survNPDR <- pr_curve_survNPDR$auc.integral
 
-    #browser()
+    # Save results
+    errors <- rbind(errors, data.frame(
+      K = as.character(k),  # store "adaptive" as a string
+      Replicate = i,
+      AUC = auc_survNPDR
+    ))
 
-    
-    # Calculate true positives, false positives, false negatives
-    true_positives <- sum(selected_features %in% true_functional_features)
-    false_positives <- sum(!selected_features %in% true_functional_features)
-    false_negatives <- sum(!true_functional_features %in% selected_features)
-    
-    # Calculate precision and recall
-    precision <- true_positives / (true_positives + false_positives)
-    recall <- true_positives / (true_positives + false_negatives)
-    
-    # Store the results in the dataframe
-    results_df <- rbind(
-      results_df, 
-      data.frame(Replicate = i, K = k, Precision = precision, Recall = recall))
-
-    
-    # Print percentage completion
     print(paste("Completed", (i / num_replicates) * 100, "% of the simulations."))
-
-    # Print the value of k
     print(paste("Completed simulations for k =", k))
+    print(paste("AUC for k =", k, "is", auc_survNPDR))
   }
 }
-
 # View the results
-print(results_df)
+print(errors)
 
 # Optionally save to a file
-write.csv(results_df, "paper_tables/PR_K.csv", row.names = FALSE)
+write.csv(errors, file.path(root, "paper_tables", "PR_K_AUC_main.csv"), row.names = FALSE)
 
 
-# Load necessary libraries
-library(ggplot2)
-library(tidyr)
+# Read in the PR_K_AUC.csv file
+errors <- read.csv(file.path(root, "paper_tables", "PR_K_AUC_main.csv"))
 
-# Reshape the results_df for plotting
-results_long <- results_df %>%
-  pivot_longer(cols = c("Precision", "Recall"), names_to = "Metric", values_to = "Value")
 
-# Create the plot with larger fonts
-ggplot(results_long, aes(x = Metric, y = Value, fill = as.factor(K))) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.7) +  # Boxplot without outliers
-  geom_jitter(width = 0.2, alpha = 0.5, size = 1.5) +  # Add jitter for individual points
-  scale_fill_brewer(palette = "Set2", name = "K") +  # Use a color palette for K
+# Replace k = 200 with "multisurf" in the errors data frame
+errors$K <- as.factor(errors$K)  # Ensure K is a factor
+levels(errors$K)[levels(errors$K) == "200"] <- "multisurf"  # Replace 200 with "multisurf"
+
+# Create the AUC boxplot with K indicated in the legend
+ggplot(errors, aes(x = K, y = AUC, fill = K)) +
+  geom_boxplot(outlier.shape = NA, alpha = 1.0, color = "black") +  # Added black border to boxes
+  geom_jitter(width = 0.2, size = 3, alpha = 0.6) +
+  stat_summary(fun = mean, geom = "text", aes(label = round(..y.., 2)), 
+               vjust = -2.5, size = 10, color = "black") +  # Adjusted vjust to bring means even higher
   labs(
-    title = "Precision and Recall Across Different K Values",
-    x = "Metric (Precision/Recall)",
-    y = "Value"
+    title = NULL,
+    x = NULL,  # Remove x-axis label
+    y = "AUC",
+    fill = "K"  # Legend title
   ) +
-  theme_minimal(base_size = 25) +  # Set a larger base font size
+  scale_fill_brewer(palette = "Set2") +  # Updated color scheme
+  coord_cartesian(ylim = c(0.0, 1.0)) +  # Adjust y-axis range to 0.15 to 0.25
+  theme_minimal() +
   theme(
-    legend.position = "top",  # Place legend at the top
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 30),  # Larger and bold title
-    axis.title.x = element_text(face = "bold", size = 28),  # Larger x-axis title
-    axis.title.y = element_text(face = "bold", size = 28),  # Larger y-axis title
-    axis.text.x = element_text(size = 22),  # Larger x-axis tick labels
-    axis.text.y = element_text(size = 22),  # Larger y-axis tick labels
-    legend.text = element_text(size = 22),  # Larger legend text
-    legend.title = element_text(face = "bold", size = 24)  # Larger and bold legend title
+    plot.title = element_text(size = 20, face = "bold"),
+    axis.title = element_text(size = 36, face = "bold"),  # Increased axis title size
+    axis.text = element_text(size = 34),  # Increased axis text size
+    axis.text.x = element_blank(),  # Remove X-axis text
+    legend.position = "top",  # Overlay legend at 80% width and height of the plot
+    legend.direction = "horizontal",
+    legend.title = element_text(size = 35, face = "bold"),  # Larger legend title
+    legend.text = element_text(size = 32),  # Larger legend text
+    panel.border = element_rect(color = "black", fill = NA, size = 1.5)
   )
 
 # Save the plot
-ggsave("paper_tables/PR_K_main.png", width = 12, height = 8, dpi = 300)
+ggsave(file.path(root, "paper_tables", "AUC_K_main_overlay_legend.png"), width = 12, height = 8, dpi = 300)
+
+# Save the plot
+ggsave(file.path(root, "paper_tables", "AUC_K_main.png"), width = 12, height = 8, dpi = 300)

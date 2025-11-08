@@ -11,10 +11,13 @@ library(R.utils)
 library(ggplot2)
 library(gridExtra)
 library(ranger)
+library(coxed)
 
-# Load custom simulation function
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/simSurvData/cox_epistasis")
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
+
+
+root <- getwd()
+devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
+devtools::load_all(file.path(root, "survival_NPDR/cox_epistasis"))
 
 # Simulation parameters
 sim_seed <- 2467
@@ -57,7 +60,9 @@ for (fold_idx in seq_along(k_folds)) {
   attr_train <- train_data %>% select(-time, -status) %>% scale()
   attr_test <- test_data %>% select(-time, -status) %>% scale(center = attr_train %>% attr("scaled:center"), scale = attr_train %>% attr("scaled:scale"))
 
+
   functional.vars <- grep("simvar", colnames(dat), value = TRUE)
+
 
   ##################
   ### survNPDR (KM.weight = FALSE)
@@ -288,10 +293,12 @@ for (fold_idx in seq_along(k_folds)) {
                                        n = n, p = p, n_main = n_main, n_int = n_int, beta_main = beta_main, beta_int = beta_int, censparam = censparam, lambda = lambda))
   }
 
+
 } # End of for loop
 
+
 # Save the results
-write.csv(errors, "paper_tables/errors_summary_with_ranger_included.csv", row.names = FALSE)
+write.csv(errors, file.path(root, "survival_NPDR/paper_tables/errors_summary_with_ranger_included.csv"), row.names = FALSE)
 
 # Print summary
 print(errors)
@@ -312,7 +319,7 @@ results_summary <- errors %>%
 print(results_summary)
 
 # Save the results summary to a CSV file
-write.csv(results_summary, "paper_tables/results_summary_with_ranger_included.csv", row.names = FALSE)
+write.csv(results_summary, file.path(root, "survival_NPDR/paper_tables/results_summary_with_ranger_included.csv"), row.names = FALSE)
 
 # ----------------- PLOTTING C-INDEX AND AUC -----------------
 # Load necessary library for color palette
@@ -371,7 +378,7 @@ auc_plot <- ggplot(errors, aes(x = method, y = auc)) +
 combined_plot <- grid.arrange(c_index_plot, auc_plot, ncol = 2)
 
 # Save the combined plot with increased width
-ggsave("paper_graphics/c_index_auc_boxplot_with_ranger_included.png", plot = combined_plot, width = 20, height = 20)
+ggsave(file.path(root, "survival_NPDR/paper_graphics/c_index_auc_boxplot_with_ranger_included.png"), plot = combined_plot, width = 20, height = 20)
 
 # Print results
 print(errors)

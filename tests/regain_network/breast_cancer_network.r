@@ -1,9 +1,11 @@
 # Load sNPDR package and prepare data
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
+library(rprojroot)
+root <- rprojroot::find_root(rprojroot::has_file("README.md"))
+devtools::load_all(file.path(root, "sNPDR"))
 
 # Read the data file with specified encoding
 library(data.table)
-dat <- fread("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/tests/processed_data.txt", 
+dat <- fread(file.path(root, "survival_NPDR/data/processed_data.txt"), 
              sep = "\t", 
              header = TRUE, 
              encoding = "UTF-8")

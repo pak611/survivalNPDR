@@ -1,6 +1,7 @@
 # Load necessary libraries and your custom functions
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/simSurvData/cox_epistasis")
-devtools::load_all("C:/Users/patri/OneDrive/Desktop/snpdr_update2/snpdr_update/sNPDR")
+root <- getwd()
+devtools::load_all(file.path(root, "survival_NPDR/cox_epistasis"))
+devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
 library(dplyr)
 library(PRROC)
 library(survival)

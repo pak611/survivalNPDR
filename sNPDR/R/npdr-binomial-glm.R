@@ -1,3 +1,76 @@
+##' Survival-aware NPDR with binomial GLM/GLMNET
+##'
+##' Compute feature importance for right-censored outcomes using nearest-neighbor
+##' (NPDR) attribute differences. Builds a pairwise design matrix from k-NN neighborhoods
+##' and fits either univariate binomial GLMs per feature or an elastic-net logistic
+##' model via glmnet.
+##'
+##' @param outcome Named character vector of length 2 with names `time_var` and
+##'   `status_var` giving the column names in `dataset` for survival time and
+##'   event status (1 = event, 0 = censored).
+##' @param dataset Data frame containing predictor attributes and the outcome
+##'   columns specified by `outcome`.
+##' @param attr.diff.type Character scalar passed to [sNPDR::npdrDiff()], e.g.,
+##'   "numeric-abs", "numeric-signed", "factor-mismatch", etc.
+##' @param nbd.method Neighborhood construction method passed to
+##'   [sNPDR::nearestNeighbors()] (e.g., "relieff", "msurf", "all-pairs").
+##' @param nbd.metric Distance metric for neighbor search (e.g., "manhattan",
+##'   "euclidean").
+##' @param knn Integer; number of nearest neighbors per instance.
+##' @param msurf.sd.frac Numeric; standard-deviation fraction for msurf
+##'   neighborhood pruning.
+##' @param use.glmnet Logical; if TRUE, fit a penalized logistic model with
+##'   glmnet using all features jointly; if FALSE, fit separate univariate GLMs
+##'   per feature.
+##' @param glmnet.alpha Elastic-net mixing parameter alpha in [0, 1].
+##' @param glmnet.lower Lower coefficient bounds (passed to glmnet via
+##'   `lower.limits`).
+##' @param lambda.grid Numeric vector of lambda values (currently unused; kept
+##'   for API compatibility).
+##' @param glmnet.lam Character or numeric controlling which lambda to use:
+##'   "lambda.min", "lambda.1se", or a positive numeric value.
+##' @param model.type Character, kept for API compatibility; currently ignored.
+##' @param KM.weight Logical; if TRUE apply Kaplan–Meier based kernel weights to
+##'   attribute differences.
+##' @param KM.kernel.type Kernel type for survival weighting: "gaussian" or
+##'   "linear".
+##' @param KM.kernel.sigma Numeric sigma for the Gaussian kernel when
+##'   `KM.kernel.type = "gaussian"`.
+##'
+##' @return A data.frame with columns `Feature` and `beta` (coefficient), sorted
+##'   by absolute coefficient magnitude in descending order. For glmnet fits,
+##'   coefficients are taken at the selected lambda; for univariate GLMs, each
+##'   coefficient corresponds to the effect of that feature.
+##'
+##' @details Pairs (Ri, NN) with `NN_time <= Ri_time` and `NN_status == 0` are
+##'   filtered to respect censoring. Kaplan–Meier survival probabilities are
+##'   estimated per node of each pair and combined via a kernel to weight the
+##'   attribute differences when `KM.weight = TRUE`.
+##'
+##' @examples
+##' \dontrun{
+##' set.seed(1)
+##' n <- 100; p <- 10
+##' X <- as.data.frame(matrix(rnorm(n*p), n, p))
+##' names(X) <- paste0('x', 1:p)
+##' dat <- cbind(X,
+##'              time = rexp(n, rate = 0.1),
+##'              status = rbinom(n, 1, 0.7))
+##'
+##' res <- npdr_surv_binomial_glm(
+##'   outcome = c(time_var = 'time', status_var = 'status'),
+##'   dataset = dat,
+##'   knn = 10,
+##'   use.glmnet = TRUE
+##' )
+##' head(res)
+##' }
+##'
+##' @seealso [sNPDR::nearestNeighbors()], [sNPDR::npdrDiff()],
+##'   [glmnet::cv.glmnet()]
+##' @importFrom dplyr select mutate case_when
+##' @importFrom stats glm
+##' @export
 npdr_surv_binomial_glm <- function(outcome = c("time_var" = "time", 
                                               "status_var" = "status"),
                                   dataset, 
