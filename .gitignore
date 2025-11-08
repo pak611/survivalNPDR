@@ -11,6 +11,8 @@
 # Large data: keep out of Git. Provide a small README instead.
 data/*
 !data/README.md
+!data/.gitkeep
+cox_epistasis/
 
 # Generated artifacts
 paper_graphics/*.pdf

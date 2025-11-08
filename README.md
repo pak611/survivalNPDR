@@ -15,7 +15,7 @@ Survival extension of Nearest-neighbor Projected Distance Regression (NPDR) for 
 - `regain_network/*_network.r`: Network construction using ranked features.
 
 ## Simulation
-`simulate_data/` provides survival simulation utilities (censoring, interactions, varying effect sizes).
+Simulation utilities used in our experiments come from the third‑party `coxed` package (functions like `sim.survdata`). We do not include that code here. Please refer to the `coxed` package and its vignettes for data generation, or install it locally and point scripts to your simulated datasets.
 
 ## Dependencies
 R packages: survival, glmnet, PRROC, dplyr, ggplot2, survcomp, survivalsvm, ranger, Biobase.
@@ -33,5 +33,3 @@ head(res)
 ```
 
 ## Contact
-Open an issue for questions.
-
