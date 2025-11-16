@@ -14,21 +14,6 @@ Survival extension of Nearest-neighbor Projected Distance Regression (NPDR) for 
 - `real_data_analysis/real_model_performance.r`: Aggregate real-data metrics.
 - `regain_network/*_network.r`: Network construction using ranked features.
 
-## Plot exports (figures)
-- Main-effects benchmark (`tests/main/main_effects.r`)
-    - Combined C-index and AUC boxplots: `paper_graphics/c_index_auc_boxplot_with_ranger_included.png`
-        - Size: 30 in × 20 in, 300 dpi (two panels side-by-side)
-    - C-index only: `paper_graphics/c_index_boxplot_with_ranger_included.png`
-        - Size: 18 in × 12 in, 300 dpi
-- Interaction-effects benchmark (`tests/main/interaction_effects.r`)
-    - Combined C-index and AUC boxplots: `paper_graphics/c_index_auc_boxplot_filtered.png`
-        - Size: 30 in × 20 in, 300 dpi
-    - C-index only: `paper_graphics/c_index_boxplot_filtered2.png`
-        - Size: 18 in × 12 in, 300 dpi
-
-Notes:
-- Wider exports reduce x-axis label crowding in side-by-side layouts.
-- Fonts, borders, and unified y-axes are configured within the scripts for consistent presentation.
 
 ## Simulation
 Simulated datasets for main effects and interaction effects are included under `data/`:
@@ -90,4 +75,5 @@ head(res_net)
 ```
 
 ## Contact
+
 
