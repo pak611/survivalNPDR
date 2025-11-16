@@ -12,35 +12,12 @@ library(R.utils)
 library(ggplot2)
 library(gridExtra)
 library(ranger)
-library(coxed)
 
 # Load custom simulation function
 root <- getwd()
 devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
 
-
-
-# Simulation parameters
-sim_seed <- 2467
-n <- 200
-p <- 1000
-n_main <- 2
-n_int <- 50
-beta_main <- 0.1
-beta_int <- 0.5
-censparam <- 1/4
-lambda <- 1/100
-
-# Simulate data
-simdata <- simul.int(sim_seed, n = n, p = p,
-                     n.main = n_main,
-                     n.int = n_int,
-                     beta.main = beta_main, 
-                     beta.int = beta_int, 
-                     censparam = censparam, 
-                     lambda = lambda)
-
-dat <- simdata$data
+dat <- read.csv(file.path(root, "survival_NPDR/data/interaction_effects1.csv"))
 
 # Create 10-fold cross-validation splits
 set.seed(123)
@@ -464,8 +441,15 @@ auc_plot <- ggplot(errors_filtered, aes(x = method, y = auc)) +
 # Arrange the plots side by side
 combined_plot <- grid.arrange(c_index_plot, auc_plot, ncol = 2)
 
-# Save the combined plot with increased width
-ggsave(file.path(root, "survival_NPDR/paper_graphics/c_index_auc_boxplot_filtered.png"), plot = combined_plot, width = 20, height = 20)
+# Save the combined plot with increased width (match main_effects.r)
+ggsave(
+  file.path(root, "survival_NPDR/paper_graphics/c_index_auc_boxplot_filtered.png"),
+  plot = combined_plot,
+  width = 30,
+  height = 20,
+  units = "in",
+  dpi = 300
+)
 
 # --- C-INDEX ONLY PLOT ---
 c_index_only_plot <- ggplot(errors_filtered, aes(x = method, y = c_index)) +
@@ -491,7 +475,14 @@ c_index_only_plot <- ggplot(errors_filtered, aes(x = method, y = c_index)) +
 
 c_index_only_plot
 
-ggsave(file.path(root, "survival_NPDR/paper_graphics/c_index_boxplot_filtered2.png"), plot = c_index_only_plot, width = 10, height = 10)
+ggsave(
+  file.path(root, "survival_NPDR/paper_graphics/c_index_boxplot_filtered2.png"),
+  plot = c_index_only_plot,
+  width = 18,
+  height = 12,
+  units = "in",
+  dpi = 300
+)
 
 # Print results
 print(errors_filtered)

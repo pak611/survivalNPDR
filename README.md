@@ -14,8 +14,30 @@ Survival extension of Nearest-neighbor Projected Distance Regression (NPDR) for 
 - `real_data_analysis/real_model_performance.r`: Aggregate real-data metrics.
 - `regain_network/*_network.r`: Network construction using ranked features.
 
+## Plot exports (figures)
+- Main-effects benchmark (`tests/main/main_effects.r`)
+    - Combined C-index and AUC boxplots: `paper_graphics/c_index_auc_boxplot_with_ranger_included.png`
+        - Size: 30 in × 20 in, 300 dpi (two panels side-by-side)
+    - C-index only: `paper_graphics/c_index_boxplot_with_ranger_included.png`
+        - Size: 18 in × 12 in, 300 dpi
+- Interaction-effects benchmark (`tests/main/interaction_effects.r`)
+    - Combined C-index and AUC boxplots: `paper_graphics/c_index_auc_boxplot_filtered.png`
+        - Size: 30 in × 20 in, 300 dpi
+    - C-index only: `paper_graphics/c_index_boxplot_filtered2.png`
+        - Size: 18 in × 12 in, 300 dpi
+
+Notes:
+- Wider exports reduce x-axis label crowding in side-by-side layouts.
+- Fonts, borders, and unified y-axes are configured within the scripts for consistent presentation.
+
 ## Simulation
-Simulation utilities used in our experiments come from the third‑party `coxed` package (functions like `sim.survdata`). We do not include that code here. Please refer to the `coxed` package and its vignettes for data generation, or install it locally and point scripts to your simulated datasets.
+Simulated datasets for main effects and interaction effects are included under `data/`:
+
+- `data/main_effects1.csv`
+- `data/interaction_effects1.csv`
+- `data/simulated_surv.csv`
+
+You can run the benchmark scripts in `tests/main/` directly against these files.
 
 ## Dependencies
 R packages: survival, glmnet, PRROC, dplyr, ggplot2, survcomp, survivalsvm, ranger, Biobase.
@@ -24,12 +46,47 @@ R packages: survival, glmnet, PRROC, dplyr, ggplot2, survcomp, survivalsvm, rang
 ```r
 root <- getwd()            # project root
 library(devtools)
-devtools::load_all(file.path(root, "sNPDR"))
+devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
 # run a model
+df <- read.csv(file.path(root, "survival_NPDR/data/simulated_surv.csv"))
+
 res <- npdr_surv_binomial(outcome = c(time_var="time", status_var="status"),
-                          dataset = your_data_frame,
+                          dataset = df,
                           nbd.method="multisurf", knn=20)
 head(res)
+```
+
+## Quick example with included simulated data
+
+```r
+library(readr)
+library(devtools)
+devtools::load_all("sNPDR")
+
+# Load a tiny simulated dataset (30 samples, 6 features)
+sim_path <- file.path("data", "simulated_surv.csv")
+dat <- readr::read_csv(sim_path, show_col_types = FALSE)
+
+# Univariate per-feature GLMs
+res_glm <- npdr_surv_binomial(
+    outcome = c(time_var = "time", status_var = "status"),
+    dataset = dat,
+    nbd.method = "relieff",
+    knn = 10,
+    KM.weight = FALSE
+)
+head(res_glm)
+
+# Elastic-net (joint) model; returns Feature and beta
+res_net <- npdr_surv_binomial_glm(
+    outcome = c(time_var = "time", status_var = "status"),
+    dataset = dat,
+    nbd.method = "relieff",
+    knn = 10,
+    use.glmnet = TRUE,
+    glmnet.lam = "lambda.min"
+)
+head(res_net)
 ```
 
 ## Contact

@@ -11,32 +11,16 @@ library(R.utils)
 library(ggplot2)
 library(gridExtra)
 library(ranger)
-library(coxed)
 
 
 
 root <- getwd()
 devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
-devtools::load_all(file.path(root, "survival_NPDR/cox_epistasis"))
 
-# Simulation parameters
-sim_seed <- 2467
-n <- 200
-p <- 1000
-n_main <- 50
-n_int <- 2
-beta_main <- 0.7
-beta_int <- 0.1
-censparam <- 1/4
-lambda <- 1/100
+dat <- read.csv(file.path(root, "survival_NPDR/data/main_effects1.csv"))
 
-# Simulate data
-simdata <- simul.int(sim_seed, n = n, p = p,
-                     n.main = n_main, n.int = n_int,
-                     beta.main = beta_main, beta.int = beta_int,
-                     censparam = censparam, lambda = lambda)
-
-dat <- simdata$data
+# # show survival time distribution
+# hist(dat$time, main = "Survival Time Distribution", xlab = "Time")
 
 # Create 10-fold cross-validation splits
 set.seed(123)
@@ -46,6 +30,16 @@ k_folds <- createFolds(dat$status, k = 10, list = TRUE, returnTrain = TRUE)
 df_cols <- c("method", "fold", "c_index", "auc", "runtime", "n", "p", "n_main", "n_int", "beta_main", "beta_int", "censparam", "lambda")
 errors <- data.frame(matrix(ncol = length(df_cols), nrow = 0))
 colnames(errors) <- df_cols
+
+# Define dataset size metadata (simulation params unknown here)
+n <- nrow(dat)
+p <- ncol(dat) - 2  # exclude time and status
+n_main <- NA
+n_int <- NA
+beta_main <- NA
+beta_int <- NA
+censparam <- NA
+lambda <- NA
 
 # Cross-validation loop
 for (fold_idx in seq_along(k_folds)) {
@@ -108,10 +102,20 @@ for (fold_idx in seq_along(k_folds)) {
   cox_runtime <- system.time({
     cox.model <- withTimeout({
       lapply(colnames(attr_train), function(x) {
-        formula <- as.formula(paste0("Surv(time, status) ~ ", x))
-        mod_tmp <- survival::coxph(formula, data = train_data)
-        mod_summary <- summary(mod_tmp)
-        as.data.frame(mod_summary$coefficients)
+        # Skip if column is missing or all NA in training data
+        if (!(x %in% colnames(train_data))) return(NULL)
+        if (all(is.na(train_data[[x]]))) return(NULL)
+        # Use backticks to support special characters in feature names
+        formula <- as.formula(paste("Surv(time, status) ~ `", x, "`", sep = ""))
+        res <- tryCatch({
+          mod_tmp <- survival::coxph(formula, data = train_data)
+          mod_summary <- summary(mod_tmp)
+          as.data.frame(mod_summary$coefficients)
+        }, error = function(e) {
+          message(sprintf("Cox failed for feature %s: %s", x, e$message))
+          NULL
+        })
+        res
       })
     }, timeout = 20, onTimeout = "silent")
   })[3]  # Extract elapsed time
@@ -121,6 +125,11 @@ for (fold_idx in seq_along(k_folds)) {
     next
   }
 
+  cox.model <- cox.model[!sapply(cox.model, is.null)]
+  if (length(cox.model) == 0) {
+    cat("No valid Cox results for this fold\n")
+    next
+  }
   cox.model <- do.call(rbind, cox.model) |> 
     tibble::rownames_to_column(var = "Feature") |> 
     rename(beta = "coef", HR = "exp(coef)", std.err = "se(coef)", 
@@ -377,8 +386,25 @@ auc_plot <- ggplot(errors, aes(x = method, y = auc)) +
 # Arrange the plots side by side
 combined_plot <- grid.arrange(c_index_plot, auc_plot, ncol = 2)
 
-# Save the combined plot with increased width
-ggsave(file.path(root, "survival_NPDR/paper_graphics/c_index_auc_boxplot_with_ranger_included.png"), plot = combined_plot, width = 20, height = 20)
+# Save the combined plot with increased width to reduce x-axis label crowding
+ggsave(
+  file.path(root, "survival_NPDR/paper_graphics/c_index_auc_boxplot_with_ranger_included.png"),
+  plot = combined_plot,
+  width = 30,   # was 20; increase width so each panel has more horizontal space
+  height = 20,
+  units = "in",
+  dpi = 300
+)
+
+# Also save the standalone C-index plot for use on its own
+ggsave(
+  file.path(root, "survival_NPDR/paper_graphics/c_index_boxplot_with_ranger_included.png"),
+  plot = c_index_plot,
+  width = 14,
+  height = 12,
+  units = "in",
+  dpi = 300
+)
 
 # Print results
 print(errors)
