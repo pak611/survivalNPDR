@@ -12,6 +12,9 @@
 data/*
 !data/README.md
 !data/.gitkeep
+!data/main_effects1.csv
+!data/interaction_effects1.csv
+!data/simulated_surv.csv
 cox_epistasis/
 
 # Config files not needed in repo
