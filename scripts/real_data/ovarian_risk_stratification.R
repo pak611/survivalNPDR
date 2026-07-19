@@ -4,8 +4,10 @@ library(ggplot2)
 library(patchwork)
 library(survminer)
 library(survivalsvm)
+library(survival)
 library(Biobase)   # for exprs, fData, pData
 library(dplyr)     # used below (select, arrange, mutate, rename)
+library(curatedOvarianData)
 
 datasets <- c("GSE9891", "GSE32062", "GSE13876")
 plot_list <- list()
@@ -13,14 +15,29 @@ plot_list <- list()
 #browser()
 
 library(rprojroot)
-root <- getwd()
+script_file <- sub("--file=", "", commandArgs(trailingOnly = FALSE)[grep("--file=", commandArgs(trailingOnly = FALSE))])
+root <- normalizePath(file.path(dirname(script_file), "../.."))
 
-devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
+devtools::load_all(file.path(root, "sNPDR"))
+
+load_ovarian_eset <- function(accession) {
+  object_names <- c(GSE13876 = "GSE13876_eset",
+                    GSE32062 = "GSE32062.GPL6480_eset",
+                    GSE9891 = "GSE9891_eset")
+  object_name <- object_names[[accession]]
+  if (is.null(object_name)) {
+    stop("No curatedOvarianData object configured for ", accession)
+  }
+  data(list = object_name, package = "curatedOvarianData", envir = environment())
+  if (!exists(object_name, inherits = FALSE)) {
+    stop("curatedOvarianData does not provide ", object_name)
+  }
+  get(object_name, inherits = FALSE)
+}
 
 for (ds in datasets) {
   dataset <- ds
-  load(file.path(root, "survival_NPDR/data", dataset, paste0(dataset, ".rda")))
-  gset <- get(dataset)
+  gset <- load_ovarian_eset(dataset)
   # If the loaded object is a list of ExpressionSets, take the first
   if (is.list(gset) && !methods::is(gset, "ExpressionSet")) gset <- gset[[1]]
   expr_data <- Biobase::exprs(gset)
@@ -63,11 +80,11 @@ for (ds in datasets) {
 
   for (model_name in model_names) {
     if (model_name == "survNPDR") {
-      survNPDR <- sNPDR::npdr_surv_binomial(outcome = c("time_var" = "time", "status_var" = "status"),
-                                            dataset = dat, attr.diff.type = "standard",
-                                            nbd.method = "multisurf", nbd.metric = "manhattan",
-                                            knn = 20, msurf.sd.frac = 0.5, glmnet.alpha = 1,
-                                            glmnet.lower = -Inf, model.type = "binomial")
+      survNPDR <- sNPDR::npdr_surv(outcome = c(time_var = "time", status_var = "status"),
+                                   dataset = dat, diff.type = "signed",
+                                   nbd.method = "multisurf", nbd.metric = "manhattan",
+                                   knn = 20, msurf.sd.frac = 0.5, regression = "binomial",
+                                   regularize = TRUE, alpha = 1)
       threshold <- quantile(survNPDR$p.adj, 0.90)
       survNPDR <- survNPDR %>% filter(p.adj < threshold) %>% arrange(desc(abs(beta)))
       top_features <- survNPDR$Feature[1:30]
@@ -142,5 +159,7 @@ for (ds in datasets) {
 
 # Arrange and save the 3x3 grid
 final_grid <- gridExtra::grid.arrange(grobs = plot_list, nrow = 3, ncol = 3)
-ggsave("survival_NPDR/paper_graphics/ovarian_main2_KMPlot.png",
+fig_dir <- file.path(root, "figures")
+dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
+ggsave(file.path(fig_dir, "ovarian_main2_KMPlot.png"),
        plot = final_grid, width = 16, height = 12, dpi = 300)

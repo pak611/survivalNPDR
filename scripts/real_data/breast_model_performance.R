@@ -7,9 +7,10 @@ library(survivalsvm)
 
 # Load sNPDR package and data
 library(rprojroot)
-root <- getwd()
-devtools::load_all(file.path(root, "survival_NPDR/sNPDR"))
-dat <- readRDS(file.path(root, "survival_NPDR/data", "GSE2034", "dat.rds"))
+script_file <- sub("--file=", "", commandArgs(trailingOnly = FALSE)[grep("--file=", commandArgs(trailingOnly = FALSE))])
+root <- normalizePath(file.path(dirname(script_file), "../.."))
+devtools::load_all(file.path(root, "sNPDR"))
+dat <- readRDS(file.path(root, "data", "GSE2034", "dat.rds"))
 dat <- as.data.frame(dat)
 dat <- dat %>% filter(!is.na(time) & !is.na(status))
 

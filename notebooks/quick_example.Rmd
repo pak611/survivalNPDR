@@ -12,7 +12,7 @@ output:
 
 This is a small, self-contained demonstration of Survival NPDR. It is designed
 to run in minutes and does not reproduce the full paper benchmark. Use
-`reproduce_full_paper.Rmd` for the complete workflow.
+`paper_workbook.Rmd` for the complete simulation workflow.
 
 # 1 Setup
 
