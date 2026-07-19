@@ -24,28 +24,25 @@ survivalNPDR/
 │   └── DESCRIPTION
 │
 ├── scripts/
-│   ├── simulation/               # Figs 3 & 6, Tables 1 & 2
+│   ├── simulation/               # Figs 2 & 3, Tables 1 & 2
 │   │   ├── main_effect_size_sweep_rsurv.r        # Main-effect benchmark + effect-size sweep
 │   │   └── interaction_effect_size_sweep_rsurv.r # Interaction benchmark + effect-size sweep
 │   │
-│   ├── test_k/                   # Fig 7 — neighborhood size study
+│   ├── test_k/                   # Fig 4 — neighborhood size study
 │   │   ├── test_k_lognormal.R   # runs both main + interaction k sweeps
 │   │   └── plot_k_combined_lognormal.R
 │   │
-│   ├── real_data/                # Tables 3 & 4, Fig 8
+│   ├── real_data/                # Fig 5 and Tables 3 & 4
 │   │   ├── preprocess_breast_cancer.R  # Download + preprocess GEO breast datasets
 │   │   ├── ovarian_risk_stratification.R                   # Ovarian cancer sNPDR + KM risk stratification
 │   │   ├── breast_model_performance.R         # Performance metrics (C-index, logrank, HR) for GSE2034
 │   │   └── breast_survival_curve.R         # KM descriptive figure for GSE9893
 │   │
-│   ├── network/                  # Figs 9 & 10 — interaction network analysis
-│   │   ├── breast_cancer_network.r
+│   ├── network/                  # Figs 6 & 7 — interaction network analysis
 │   │   └── ovarian_cancer_network.r
 │   │
 │   ├── figures/                  # Assemble publication figures
-│   │   ├── plot_lognormal_paper_figures.R
-│   │   ├── plot_ef_vs_effect_size.R
-│   │   └── plot_mrr_vs_effect_size.R
+│   │   └── plot_ef_vs_effect_size.R
 │   │
 │   └── analysis_statistical.R   # Friedman + Wilcoxon significance tests
 │
@@ -160,7 +157,7 @@ All scripts use `root <- getwd()`. Run from the repository root:
 cd /path/to/survivalNPDR
 ```
 
-### Figs 3 & 6 / Tables 1 & 2 — Simulation benchmarks
+### Figures 2 & 3 / Tables 1 & 2 — Simulation benchmarks
 
 Each sweep script runs all comparison methods (Cox, LASSO-Cox, survival SVM, RSF, sNPDR-signed, sNPDR-absolute) across a range of effect sizes in parallel.
 
@@ -168,52 +165,54 @@ Each sweep script runs all comparison methods (Cox, LASSO-Cox, survival SVM, RSF
 # Main-effect sweep (default beta_main = 0.00, 0.07, 0.13, 0.20, 0.27, 0.33, 0.40)
 Rscript scripts/simulation/main_effect_size_sweep_rsurv.r
 
-# Run at a single effect size only (e.g. beta_main = 0.5 for Table 1)
-BETA_MAIN_SWEEP="0.5" Rscript scripts/simulation/main_effect_size_sweep_rsurv.r
+# Table 1: main effects at beta_main = 0.13
+BETA_MAIN_SWEEP="0.13" Rscript scripts/simulation/main_effect_size_sweep_rsurv.r
 
 # Interaction-effect sweep (default beta_int = 0.00, 0.03, 0.07, 0.10, 0.13, 0.17, 0.20)
 Rscript scripts/simulation/interaction_effect_size_sweep_rsurv.r
 
-# Run at a single effect size only (e.g. beta_int = 1.0 for Table 2)
-BETA_INT_SWEEP="1.0" Rscript scripts/simulation/interaction_effect_size_sweep_rsurv.r
+# Table 2: interaction effects at beta_int = 0.20
+BETA_INT_SWEEP="0.20" Rscript scripts/simulation/interaction_effect_size_sweep_rsurv.r
 
-# Assemble figures
-Rscript scripts/figures/plot_lognormal_paper_figures.R
+# Assemble Figures 2 and 3
 Rscript scripts/figures/plot_ef_vs_effect_size.R
 ```
 
-### Fig 7 — Choice of neighborhood size k
+### Figure 4 — Choice of neighborhood size k
 
 ```bash
 # Both sweeps run in parallel (uses all available cores − 2)
 Rscript scripts/test_k/test_k_lognormal.R   # runs both main + interaction k sweeps
-Rscript scripts/test_k/plot_k_combined_lognormal.R
-# → figures/auPRC_K_combined_lognormal_no_multisurf.png
+Rscript scripts/test_k/plot_k_combined_lognormal.R 0.5 100
+# → figures/auPRC_K_combined_lognormal_no_multisurf_sigma0.50_p100.png
 ```
 
-### Tables 3 & 4 — Real cancer dataset benchmarks
+### Figure 5 / Tables 3 & 4 — Real cancer dataset benchmarks
 
 ```bash
 # Breast cancer: download and preprocess from GEO (requires GEOquery)
 Rscript scripts/real_data/preprocess_breast_cancer.R
 
-# Ovarian cancer sNPDR + KM risk stratification
+# Ovarian cancer sNPDR + KM risk stratification (Table 4)
 Rscript scripts/real_data/ovarian_risk_stratification.R
 
-# Performance metrics (C-index, logrank, HR) for GSE2034 → Tables 3 & 4
+# Breast cancer performance metrics (Table 3)
 Rscript scripts/real_data/breast_model_performance.R
 ```
 
-### Fig 8 — Kaplan-Meier risk stratification
+### Figure 5 — Kaplan-Meier risk stratification
 
 ```bash
 Rscript scripts/real_data/breast_survival_curve.R
 ```
 
-### Figs 9 & 10 — Interaction networks (ReGAIN)
+### Figures 6 & 7 — Interaction networks (ReGAIN)
 
 ```bash
-Rscript scripts/network/breast_cancer_network.r
+# Figure 6: breast cancer interaction network (GSE9893)
+# Generated from the breast-cancer analysis workflow.
+
+# Figure 7: ovarian ReGAIN interaction network (GSE9891)
 Rscript scripts/network/ovarian_cancer_network.r
 ```
 
