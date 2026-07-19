@@ -1,47 +1,48 @@
-#' Compute Kaplan-Meier Survival Estimates and Merge With Data
+#=========================================================================#
+#' kmImputeTimes
 #'
-#' This function computes Kaplan-Meier survival estimates for a given dataset
-#' and adds a column to the dataset with these survival probabilities.
-#' @param NN.df A dataframe containing at least two columns: `time` and `outcome`,
-#' where `time` is the time to event or censoring and `outcome` is a binary
-#' indicator of the event occurrence (1 if the event occurred, 0 if censored).
-#' @return A dataframe similar to `NN.df` but with an additional column `surv_prob`
-#' indicating the survival probability at each time point.
-#' @importFrom dplyr left_join mutate
-#' @importFrom survival Surv survfit
-#' @importFrom broom tidy
+#' Kaplan-Meier conditional mean imputation for right-censored survival times.
+#'
+#' For each censored subject with observed time \eqn{t_c}, replaces \eqn{t_c}
+#' with the conditional mean \eqn{\hat{E}[T \mid T > t_c]}, estimated by
+#' rectangular integration of the Kaplan-Meier step function:
+#' \deqn{E[T \mid T > t_c] = t_c + \frac{1}{S(t_c)} \int_{t_c}^{T_{\max}} S(t)\,dt}
+#' Event subjects are left unchanged.
+#'
+#' @param time Numeric vector of observed survival/censoring times.
+#' @param status Integer or logical vector; 1 (or TRUE) = event, 0 (or FALSE) = censored.
+#'
+#' @return Numeric vector the same length as \code{time} with censored values
+#'   replaced by their KM conditional mean estimates.
+#'
 #' @examples
-#' # Assuming NN.df has columns `time` and `outcome`
-#' # new_df <- computeKM(NN.df)
+#' \dontrun{
+#' time   <- c(5, 10, 3, 8, 12)
+#' status <- c(1,  0, 1, 0,  1)
+#' kmImputeTimes(time, status)
+#' }
+#'
+#' @importFrom survival Surv survfit
 #' @export
-computeKM <- function(NN.df) {
-  if (!requireNamespace("survival", quietly = TRUE)) {
-    stop("Package 'survival' is required.")
-  }
-  if (!requireNamespace("dplyr", quietly = TRUE)) {
-    stop("Package 'dplyr' is required.")
-  }
-  if (!requireNamespace("broom", quietly = TRUE)) {
-    stop("Package 'broom' is required.")
-  }
+kmImputeTimes <- function(time, status) {
+  km.fit   <- survival::survfit(survival::Surv(time, status) ~ 1)
+  km.times <- km.fit$time
+  km.surv  <- km.fit$surv
+  imputed  <- time
 
-  #browser()
-  
-  # Creating the survival object correctly
-  surv_obj <- survival::Surv(time = NN.df$time, event = as.numeric(NN.df$status))
-  
-  # Compute the Kaplan-Meier estimate
-  km_estimate <- survival::survfit(surv_obj ~ 1)
-  
-  # Tidy the km_estimate for merging
-  km_data <- broom::tidy(km_estimate) %>%
-    dplyr::select(time, estimate) %>%
-    dplyr::rename(surv_prob = estimate)
-  
-  # Merge the Kaplan-Meier estimates with NN.df based on time
-  new_df <- NN.df %>%
-    dplyr::left_join(km_data, by = "time")
-  
-  return(new_df)
+  for (i in which(status == 0)) {
+    tc         <- time[i]
+    idx.le     <- which(km.times <= tc)
+    S.tc       <- if (length(idx.le) == 0) 1.0 else km.surv[max(idx.le)]
+    if (S.tc <= 0) next
+
+    idx.beyond <- which(km.times > tc)
+    if (length(idx.beyond) == 0) next
+
+    t.knots    <- c(tc, km.times[idx.beyond])
+    s.knots    <- c(S.tc, km.surv[idx.beyond])
+    area       <- sum(diff(t.knots) * s.knots[-length(s.knots)])
+    imputed[i] <- tc + area / S.tc
+  }
+  imputed
 }
-

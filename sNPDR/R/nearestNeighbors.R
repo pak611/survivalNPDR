@@ -257,7 +257,6 @@ nearestNeighbors <- function(attr.mat,
       Ri.radius <- colSums(dist.mat) / (num.samp - 1) - sd.frac * sd.vec # use adaptive radius
     }
     if (dopar.nn) {
-      print('here1')
       avai.cors <- parallel::detectCores() - 2
       cl <- parallel::makeCluster(avai.cors)
       doParallel::registerDoParallel(cl)
@@ -273,7 +272,6 @@ nearestNeighbors <- function(attr.mat,
       }
       #parallel::stopCluster(cl)
     } else {
-      print('here2')
       # put each Ri's nbd in a list then rbind them at the end with bind_rows()
       Ri.nearestPairs.list <- vector("list", num.samp) # initialize list
       

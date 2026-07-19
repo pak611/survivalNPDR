@@ -1,0 +1,388 @@
+---
+title: "Survival NPDR — Reproducing Paper Results"
+author: "Kampmeyer, Dawkins, Urbanowicz, Kazemi-Nia, McKinney"
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    toc: true
+    toc_float: true
+    code_folding: show
+    theme: flatly
+---
+
+This notebook walks through the key analyses from the paper.
+
+# 1 Setup
+
+## Install packages (run once)
+
+```{r install, eval=FALSE}
+install.packages(c(
+  "survival", "dplyr", "rlang", "PRROC", "glmnet",
+  "caret", "survivalsvm", "ranger", "R.utils",
+  "ggplot2", "tibble", "rsurv", "parallel",
+  "survcomp", "broom", "here", "devtools"
+))
+```
+
+## Install sNPDR (run once, from the repo root)
+
+```{r install-snpdr, eval=FALSE}
+devtools::install("../sNPDR")
+```
+
+## Load everything
+
+```{r setup, message=FALSE, warning=FALSE}
+library(survival)
+library(dplyr)
+library(ggplot2)
+library(PRROC)
+library(rsurv)
+library(broom)
+
+root <- here::here()   # repo root
+devtools::load_all(file.path(root, "sNPDR"), quiet = TRUE)
+```
+
+---
+
+# 2 Simulation Demo
+
+A quick, self-contained run to verify the method end-to-end. We use smaller
+parameters than the paper (p = 100, 3 replicates) so it finishes in a few
+minutes on a laptop.
+
+## Data generation
+
+Survival times follow a lognormal AFT model:
+
+$$\log T_i = \mu + \sum_{j=1}^{10} \beta_j X_{ij} + \sigma \varepsilon_i, \quad \varepsilon_i \sim \mathcal{N}(0,1)$$
+
+The first 10 features are functional ($\beta \neq 0$); the remaining 90 are noise.
+
+```{r simulate}
+simulate_main <- function(n, p, n_main, beta, meanlog, sdlog, max_time, seed) {
+  set.seed(seed)
+  feat_names   <- paste0("simvar", seq_len(p))
+  signal_names <- paste0("simvar", seq_len(n_main))
+  X <- as.data.frame(matrix(rnorm(n * p), nrow = n, ncol = p,
+                             dimnames = list(NULL, feat_names)))
+  betas <- c(rep( beta, ceiling(n_main / 2)),
+             rep(-beta, floor(n_main / 2)))
+  fmla  <- as.formula(paste("~", paste(signal_names, collapse = " + ")))
+  set.seed(seed + 1)
+  t_event <- rsurv::raftreg(runif(n), formula = fmla, beta = betas,
+                             dist = "lnorm", meanlog = meanlog,
+                             sdlog = sdlog, data = X)
+  time   <- pmin(t_event, max_time)
+  status <- as.integer(t_event <= max_time)
+  list(data = cbind(X, time = time, status = status),
+       functional_vars = signal_names)
+}
+
+sim <- simulate_main(n = 200, p = 100, n_main = 10, beta = 0.4,
+                     meanlog = log(100), sdlog = 0.25,
+                     max_time = 125, seed = 2467)
+
+cat(sprintf("n=%d | p=%d | events=%d (%.0f%%) | censored=%d\n",
+            nrow(sim$data), ncol(sim$data) - 2,
+            sum(sim$data$status), 100 * mean(sim$data$status),
+            sum(sim$data$status == 0)))
+```
+
+## Run sNPDR
+
+`diff.type = "signed"` preserves direction $(\Delta T \sim \Delta X)$ and is
+optimal for main-effect detection in AFT models. `nbd.method = "multisurf"`
+selects the neighborhood size adaptively.
+
+```{r run-snpdr}
+res <- npdr_surv(
+  outcome    = c(time_var = "time", status_var = "status"),
+  dataset    = sim$data,
+  diff.type  = "signed",
+  regression = "lm"
+)
+
+head(res[order(res$pval), ], 15)
+```
+
+## Enrichment check
+
+```{r enrichment}
+ranked <- res$feature[order(res$pval)]
+func   <- sim$functional_vars
+
+mrr_rank <- which(ranked %in% func)[1]
+cat(sprintf("First functional feature at rank %d  (MRR = %.3f)\n",
+            mrr_rank, 1 / mrr_rank))
+
+k10  <- ceiling(100 * 0.10)   # top 10% of 100 features
+hits <- sum(ranked[1:k10] %in% func)
+ef10 <- hits / k10 / (10 / 100)
+cat(sprintf("EF@10%% = %.1f  (%d / %d top features are functional)\n",
+            ef10, hits, k10))
+```
+
+## auPRC across effect sizes (3-replicate mini sweep)
+
+```{r mini-sweep}
+beta_vals <- c(0.0, 0.2, 0.4)
+
+auprc_df <- do.call(rbind, lapply(beta_vals, function(bv) {
+  auprcs <- vapply(1:3, function(r) {
+    s   <- simulate_main(200, 100, 10, bv, log(100), 0.25, 125, 2467 + r * 997L)
+    out <- npdr_surv(
+      outcome    = c(time_var = "time", status_var = "status"),
+      dataset    = s$data,
+      diff.type  = "signed",
+      regression = "lm"
+    )
+    pos <- out$pval[ out$feature %in% s$functional_vars]
+    neg <- out$pval[!out$feature %in% s$functional_vars]
+    PRROC::pr.curve(scores.class0 = 1 - pos,
+                    scores.class1 = 1 - neg)$auc.integral
+  }, numeric(1))
+  data.frame(beta = bv, mean_auprc = mean(auprcs), sd = sd(auprcs))
+}))
+
+ggplot(auprc_df, aes(x = beta, y = mean_auprc)) +
+  geom_line(colour = "steelblue", linewidth = 1) +
+  geom_point(size = 3, colour = "steelblue") +
+  geom_errorbar(aes(ymin = mean_auprc - sd, ymax = mean_auprc + sd),
+                width = 0.01, colour = "steelblue") +
+  labs(x = expression(beta[main]), y = "auPRC",
+       title = "sNPDR-signed: auPRC vs. effect size (demo: n=200, p=100, 3 reps)") +
+  ylim(0, 1) + theme_bw()
+```
+
+---
+
+# 3 Full Paper Results
+
+These chunks load the pre-computed CSVs from `results/` — no re-computation
+needed.
+
+```{r load-results}
+res_dir <- file.path(root, "results")
+
+main_summary <- read.csv(file.path(res_dir,
+  "main_effect_size_sweep_rsurv_results_summary.csv"))
+int_summary  <- read.csv(file.path(res_dir,
+  "interaction_effect_size_sweep_rsurv_results_summary.csv"))
+k_main       <- read.csv(file.path(res_dir, "auPRC_K_main_lognormal.csv"))
+
+method_colours <- c(
+  "sNPDR-signed"   = "#E41A1C",
+  "sNPDR-absolute" = "#FF7F00",
+  "sNPDR-LM-KM"   = "#984EA3",
+  "Cox"            = "#377EB8",
+  "LASSO-Cox"      = "#4DAF4A",
+  "SurvSVM"        = "#A65628",
+  "RSF"            = "#F781BF"
+)
+```
+
+## Figure 3 — Main-effect sweep, EF@1%
+
+```{r fig3}
+main_summary %>%
+  filter(method %in% names(method_colours)) %>%
+  mutate(method = factor(method, levels = names(method_colours))) %>%
+  ggplot(aes(x = beta_main, y = mean_ef_at_1pct,
+             colour = method, group = method)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2.5) +
+  geom_errorbar(aes(ymin = mean_ef_at_1pct - sd_ef_at_1pct,
+                    ymax = mean_ef_at_1pct + sd_ef_at_1pct),
+                width = 0.008) +
+  scale_colour_manual(values = method_colours, name = NULL) +
+  labs(x = expression(beta[main]), y = "Enrichment Factor @ 1%",
+       title = "Main-effect sweep (n=200, p=1000, 10 functional, 20 reps)") +
+  theme_bw() + theme(legend.position = "right")
+```
+
+## Figure 6 — Interaction sweep, EF@1%
+
+The interaction model has no marginal effects — signal is encoded purely as
+$T_i \propto \exp(\beta \cdot X_{ij} \cdot X_{ik})$. `diff.type = "absolute"`
+(symmetric $|\Delta T| \sim |\Delta X|$) is the correct formulation here.
+
+```{r fig6}
+int_summary %>%
+  filter(method %in% names(method_colours)) %>%
+  mutate(method = factor(method, levels = names(method_colours))) %>%
+  ggplot(aes(x = beta_int, y = mean_ef_at_1pct,
+             colour = method, group = method)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2.5) +
+  geom_errorbar(aes(ymin = mean_ef_at_1pct - sd_ef_at_1pct,
+                    ymax = mean_ef_at_1pct + sd_ef_at_1pct),
+                width = 0.004) +
+  scale_colour_manual(values = method_colours, name = NULL) +
+  labs(x = expression(beta[int]), y = "Enrichment Factor @ 1%",
+       title = "Interaction sweep (n=500, p=1000, 10 pairs, 20 reps)") +
+  theme_bw() + theme(legend.position = "right")
+```
+
+## Figure 7 — auPRC vs. neighborhood size k
+
+```{r fig7}
+k_main %>%
+  group_by(K) %>%
+  summarise(mean_auprc = mean(auPRC), sd_auprc = sd(auPRC), .groups = "drop") %>%
+  ggplot(aes(x = K, y = mean_auprc)) +
+  geom_line(colour = "#E41A1C", linewidth = 1) +
+  geom_point(size = 3, colour = "#E41A1C") +
+  geom_errorbar(aes(ymin = mean_auprc - sd_auprc, ymax = mean_auprc + sd_auprc),
+                width = 1, colour = "#E41A1C") +
+  labs(x = "k (neighborhood size)", y = "auPRC",
+       title = "sNPDR-signed: sensitivity to neighborhood size (main effects)") +
+  theme_bw()
+```
+
+## Table 1 — methods at $\beta_{\text{main}} = 0.40$
+
+```{r table1}
+main_summary %>%
+  filter(beta_main == 0.40) %>%
+  select(method, mean_auprc, sd_auprc, mean_ef_at_1pct,
+         median_ef_at_1pct, mean_mrr, n_sims) %>%
+  arrange(desc(mean_auprc)) %>%
+  knitr::kable(digits = 3,
+               col.names = c("Method", "Mean auPRC", "SD",
+                             "Mean EF@1%", "Median EF@1%", "Mean MRR", "N"))
+```
+
+## Table 2 — methods at $\beta_{\text{int}} = 0.20$
+
+```{r table2}
+int_summary %>%
+  filter(beta_int == 0.20) %>%
+  select(method, mean_auprc, sd_auprc, mean_ef_at_1pct,
+         median_ef_at_1pct, mean_mrr, n_sims) %>%
+  arrange(desc(mean_auprc)) %>%
+  knitr::kable(digits = 3,
+               col.names = c("Method", "Mean auPRC", "SD",
+                             "Mean EF@1%", "Median EF@1%", "Mean MRR", "N"))
+```
+
+---
+
+# 4 Real Data — GSE9893 (Figure 8)
+
+Loads the pre-processed GSE9893 dataset, runs sNPDR-LASSO to select a gene
+signature, splits patients by median risk score, and plots Kaplan-Meier curves.
+
+```{r load-gse9893}
+dat_gse <- readRDS(file.path(root, "data", "GSE9893", "dat.rds")) %>%
+  as.data.frame() %>%
+  filter(!is.na(time), !is.na(status))
+
+cat(sprintf("GSE9893: %d patients | %d genes | %d events (%.0f%%)\n",
+            nrow(dat_gse), ncol(dat_gse) - 2,
+            sum(dat_gse$status), 100 * mean(dat_gse$status)))
+```
+
+```{r select-genes}
+# Top 500 genes by variance (paper uses 5000; 500 keeps this chunk fast)
+top_genes <- dat_gse %>%
+  select(-time, -status) %>%
+  { names(sort(apply(., 2, var), decreasing = TRUE)[1:500]) }
+
+dat_small <- dat_gse %>% select(all_of(top_genes), time, status)
+```
+
+```{r run-snpdr-real}
+snpdr_res <- npdr_surv(
+  outcome       = c(time_var = "time", status_var = "status"),
+  dataset       = dat_small,
+  diff.type     = "absolute",
+  regression    = "binomial",
+  regularize    = TRUE,
+  alpha         = 1,
+  nbd.method    = "multisurf",
+  msurf.sd.frac = 0.5
+)
+
+cat(sprintf("sNPDR selected %d non-zero features.\n", nrow(snpdr_res)))
+head(snpdr_res[order(-abs(snpdr_res$beta)), ], 10)
+```
+
+```{r km-plot}
+# Risk scores
+X_mat    <- as.matrix(dat_small[, snpdr_res$feature, drop = FALSE])
+risk_vec <- as.numeric(X_mat %*% snpdr_res$beta)
+
+dat_km <- dat_small %>%
+  select(time, status) %>%
+  mutate(risk_group = ifelse(risk_vec > median(risk_vec), "High", "Low"))
+
+# Log-rank p-value
+lr   <- survdiff(Surv(time, status) ~ risk_group, data = dat_km)
+lr_p <- 1 - pchisq(lr$chisq, df = 1)
+
+# KM curves
+km_fit <- survfit(Surv(time, status) ~ risk_group, data = dat_km)
+
+broom::tidy(km_fit) %>%
+  mutate(group = sub("risk_group=", "", strata)) %>%
+  ggplot(aes(x = time, y = estimate, colour = group, fill = group)) +
+  geom_step(linewidth = 1) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.15, colour = NA) +
+  scale_colour_manual(values = c("High" = "#E41A1C", "Low" = "#377EB8")) +
+  scale_fill_manual(  values = c("High" = "#E41A1C", "Low" = "#377EB8")) +
+  labs(x = "Time (months)", y = "Survival probability",
+       colour = "Risk group", fill = "Risk group",
+       title = sprintf("GSE9893 — sNPDR risk groups  (log-rank p = %.3f)", lr_p)) +
+  ylim(0, 1) + theme_bw()
+```
+
+---
+
+# 5 Statistical Tests
+
+Pairwise Wilcoxon signed-rank tests (Holm-corrected) at the simulation-replicate
+level, reproducing `scripts/analysis_statistical.R`.
+
+```{r wilcoxon}
+fold_main <- read.csv(file.path(res_dir,
+  "main_effect_size_sweep_rsurv_fold_metrics.csv"))
+
+methods_cmp <- c("sNPDR-signed", "Cox", "LASSO-Cox", "RSF", "SurvSVM")
+
+sim_level <- fold_main %>%
+  filter(beta_main == 0.40, method %in% methods_cmp) %>%
+  group_by(method, sim_id) %>%
+  summarise(auprc = mean(auprc, na.rm = TRUE), .groups = "drop")
+
+pairs <- combn(methods_cmp, 2, simplify = FALSE)
+
+wilcox_df <- do.call(rbind, lapply(pairs, function(p) {
+  a <- sim_level %>% filter(method == p[1]) %>% pull(auprc)
+  b <- sim_level %>% filter(method == p[2]) %>% pull(auprc)
+  if (length(a) < 3 || length(b) < 3) return(NULL)
+  wt <- wilcox.test(a, b, paired = TRUE, exact = FALSE)
+  data.frame(method_A = p[1], method_B = p[2],
+             median_A = round(median(a), 3),
+             median_B = round(median(b), 3),
+             p_raw    = wt$p.value)
+}))
+
+wilcox_df$p_holm <- p.adjust(wilcox_df$p_raw, method = "holm")
+
+wilcox_df %>%
+  arrange(p_holm) %>%
+  knitr::kable(digits = 4,
+               col.names = c("Method A", "Method B",
+                             "Median A", "Median B", "p (raw)", "p (Holm)"))
+```
+
+---
+
+# Session Info
+
+```{r session-info}
+sessionInfo()
+```

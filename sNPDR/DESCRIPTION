@@ -1,33 +1,38 @@
 Package: sNPDR
-Title: Survival Nearest-neighbor Projected-Distance Regression
-Version: 0.0.0.9000
-Authors@R: person("Patrick, Kampmeyer", email = "pak611@utulsa.edu", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.3.2)
+Title: Survival Nearest-Neighbor Projected Distance Regression
+Version: 1.0.0
+Authors@R: c(
+    person("Patrick", "Kampmeyer", email = "pak611@utulsa.edu",
+           role = c("aut", "cre")),
+    person("Bryan A.", "Dawkins", role = "aut"),
+    person("Brett A.", "McKinney", role = "aut"))
+Description: Feature selection for right-censored survival outcomes in
+    high-dimensional data. Survival NPDR extends Nearest-Neighbor Projected
+    Distance Regression (NPDR) to survival settings by regressing pairwise
+    survival-time differences on pairwise attribute differences within a
+    censor-aware nearest-neighbor neighborhood. Supports signed and absolute
+    difference formulations, Kaplan-Meier imputation for censored neighbors,
+    covariate adjustment, and elastic-net regularization. Includes ReGAIN for
+    pairwise gene-gene interaction network reconstruction from survival data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
-    dplyr, 
+Depends: R (>= 4.0.0)
+Imports:
+    dplyr,
+    magrittr,
+    tibble,
+    rlang,
     survival,
     broom,
-    rlang,
-    PRROC,
-    glmnet
-Suggests: 
-    knitr,
-    CORElearn,
-    speedglm,
-    ggplot2,
-    doParallel,
-    parallel,
-    foreach,
-    flexclust,
     glmnet,
-    rmarkdown,
-    wordspace,
+    PRROC
+Suggests:
+    ggplot2,
+    parallel,
     tibble,
-    tidyr,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 RoxygenNote: 7.3.1
 VignetteBuilder: knitr
