@@ -26,7 +26,8 @@ Imports:
     survival,
     broom,
     glmnet,
-    PRROC
+    PRROC,
+    npdr
 Suggests:
     ggplot2,
     parallel,

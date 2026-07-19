@@ -143,7 +143,7 @@ npdr_surv <- function(outcome       = c(time_var = "time", status_var = "status"
   }
 
   ##### find nearest neighbors
-  neighbor.pairs.idx <- sNPDR::nearestNeighbors(
+  neighbor.pairs.idx <- npdr::nearestNeighbors(
     attr.mat   = attr.mat,
     sd.frac    = msurf.sd.frac,
     k          = knn,
