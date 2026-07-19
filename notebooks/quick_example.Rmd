@@ -66,8 +66,9 @@ The first 10 features are functional ($\beta \neq 0$); the remaining 90 are nois
 ```{r simulate}
 simulate_main <- function(n, p, n_main, beta, meanlog, sdlog, max_time, seed) {
   set.seed(seed)
-  feat_names   <- paste0("simvar", seq_len(p))
-  signal_names <- paste0("simvar", seq_len(n_main))
+  signal_names <- paste0("functional_", seq_len(n_main))
+  noise_names  <- paste0("noise_", seq_len(p - n_main))
+  feat_names   <- c(signal_names, noise_names)
   X <- as.data.frame(matrix(rnorm(n * p), nrow = n, ncol = p,
                              dimnames = list(NULL, feat_names)))
   betas <- c(rep( beta, ceiling(n_main / 2)),
@@ -120,20 +121,33 @@ mrr_rank <- which(ranked %in% func)[1]
 cat(sprintf("First functional feature at rank %d  (MRR = %.3f)\n",
             mrr_rank, 1 / mrr_rank))
 
-k10  <- ceiling(100 * 0.10)   # top 10% of 100 features
-hits <- sum(ranked[1:k10] %in% func)
-ef10 <- hits / k10 / (10 / 100)
-cat(sprintf("EF@10%% = %.1f  (%d / %d top features are functional)\n",
-            ef10, hits, k10))
+k1   <- ceiling(100 * 0.01)   # top 1% of 100 features
+hits <- sum(ranked[1:k1] %in% func)
+ef1  <- hits / k1 / (10 / 100)
+cat(sprintf("EF@1%% = %.1f  (%d / %d top features are functional)\n",
+            ef1, hits, k1))
 ```
 
-## auPRC across effect sizes (3-replicate mini sweep)
+## Main-effect EF@1% across effect sizes (3-replicate mini sweep)
 
 ```{r mini-sweep}
+compute_ef1 <- function(result, functional_vars, total_features,
+                        ranking = c("pval", "beta")) {
+  ranking <- match.arg(ranking)
+  ranked <- if (ranking == "pval") {
+    result$feature[order(result$pval)]
+  } else {
+    result$feature[order(result$beta, decreasing = TRUE)]
+  }
+  cutoff <- max(1, ceiling(total_features * 0.01))
+  hits <- sum(ranked[seq_len(cutoff)] %in% functional_vars)
+  (hits / cutoff) / (length(functional_vars) / total_features)
+}
+
 beta_vals <- c(0.0, 0.2, 0.4)
 
-auprc_df <- do.call(rbind, lapply(beta_vals, function(bv) {
-  auprcs <- vapply(1:3, function(r) {
+main_ef_df <- do.call(rbind, lapply(beta_vals, function(bv) {
+  ef1_values <- vapply(1:3, function(r) {
     s   <- simulate_main(200, 100, 10, bv, log(100), 0.25, 125, 2467 + r * 997L)
     out <- npdr_surv(
       outcome    = c(time_var = "time", status_var = "status"),
@@ -141,27 +155,76 @@ auprc_df <- do.call(rbind, lapply(beta_vals, function(bv) {
       diff.type  = "signed",
       regression = "lm"
     )
-    pos <- out$pval[ out$feature %in% s$functional_vars]
-    neg <- out$pval[!out$feature %in% s$functional_vars]
-    PRROC::pr.curve(scores.class0 = 1 - pos,
-                    scores.class1 = 1 - neg)$auc.integral
+    compute_ef1(out, s$functional_vars, total_features = 100)
   }, numeric(1))
-  data.frame(beta = bv, mean_auprc = mean(auprcs), sd = sd(auprcs))
+  data.frame(beta = bv, mean_ef1 = mean(ef1_values), sd_ef1 = sd(ef1_values))
 }))
 
-ggplot(auprc_df, aes(x = beta, y = mean_auprc)) +
-  geom_line(colour = "steelblue", linewidth = 1) +
-  geom_point(size = 3, colour = "steelblue") +
-  geom_errorbar(aes(ymin = mean_auprc - sd, ymax = mean_auprc + sd),
-                width = 0.01, colour = "steelblue") +
-  labs(x = expression(beta[main]), y = "auPRC",
-       title = "sNPDR-signed: auPRC vs. effect size (demo: n=200, p=100, 3 reps)") +
-  ylim(0, 1) + theme_bw()
+cat("\nMain effects: sNPDR-signed EF@1%\n")
+print(main_ef_df, row.names = FALSE)
 ```
 
 ---
 
-# 3 Session Info
+# 3 Interaction Simulation Demo
+
+This pure-interaction simulation has no main effects: survival time depends on
+products of paired attributes. `diff.type = "absolute"` is appropriate because
+an interaction can affect survival regardless of the direction of either
+attribute difference.
+
+```{r simulate-interactions}
+simulate_interactions <- function(n, p, n_pairs, beta, meanlog, sdlog, max_time, seed) {
+  set.seed(seed)
+  interaction_names <- paste0("interaction_", seq_len(2 * n_pairs))
+  noise_names <- paste0("noise_", seq_len(p - 2 * n_pairs))
+  feature_names <- c(interaction_names, noise_names)
+  X <- as.data.frame(matrix(rnorm(n * p), nrow = n, ncol = p,
+                            dimnames = list(NULL, feature_names)))
+
+  pair_terms <- paste0(interaction_names[seq(1, 2 * n_pairs, by = 2)], ":",
+                       interaction_names[seq(2, 2 * n_pairs, by = 2)])
+  formula <- as.formula(paste("~", paste(pair_terms, collapse = " + ")))
+  set.seed(seed + 1)
+  event_time <- rsurv::raftreg(runif(n), formula = formula,
+                                beta = rep(beta, n_pairs), dist = "lnorm",
+                                meanlog = meanlog, sdlog = sdlog, data = X)
+  time <- pmin(event_time, max_time)
+  status <- as.integer(event_time <= max_time)
+  list(data = cbind(X, time = time, status = status),
+       functional_vars = interaction_names)
+}
+
+```
+
+## Interaction EF@1% across effect sizes (3-replicate mini sweep)
+
+```{r interaction-effect-sweep}
+interaction_beta_vals <- c(0.0, 0.10, 0.20)
+
+interaction_ef_df <- do.call(rbind, lapply(interaction_beta_vals, function(bv) {
+  ef1_values <- vapply(1:3, function(r) {
+    s <- simulate_interactions(500, 100, 10, bv, log(100), 0.5, 125,
+                               2467 + r * 997L)
+    out <- npdr_surv(
+      outcome = c(time_var = "time", status_var = "status"),
+      dataset = s$data,
+      diff.type = "absolute",
+      regression = "lm",
+      km.impute = TRUE
+    )
+    compute_ef1(out, s$functional_vars, total_features = 100, ranking = "beta")
+  }, numeric(1))
+  data.frame(beta = bv, mean_ef1 = mean(ef1_values), sd_ef1 = sd(ef1_values))
+}))
+
+cat("\nInteraction effects: sNPDR-absolute EF@1%\n")
+print(interaction_ef_df, row.names = FALSE)
+```
+
+---
+
+# 4 Session Info
 
 ```{r session-info}
 sessionInfo()
